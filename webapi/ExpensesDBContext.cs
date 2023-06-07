@@ -9,6 +9,7 @@ namespace webapi {
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Id)
