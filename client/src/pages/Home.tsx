@@ -1,7 +1,10 @@
+import { Flex } from '@chakra-ui/react'
 import React from 'react'
 
 export default function Home() {
   return (
-    <div>Home</div>
+    <Flex justify="center" p="16px 0px">
+      
+    </Flex>
   )
 }
