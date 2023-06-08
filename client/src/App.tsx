@@ -1,11 +1,16 @@
 import React from 'react';
 import './App.css';
+import { ChakraProvider } from '@chakra-ui/react';
+import theme from './chakra/theme';
 
 function App() {
   return (
-    <div className="App">
+    <ChakraProvider theme={theme}>
+      <div className="App">
       Works!
     </div>
+
+    </ChakraProvider>
   );
 }
 
