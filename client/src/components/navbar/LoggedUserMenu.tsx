@@ -11,7 +11,7 @@ const LoggedUserMenu: React.FC<LoggedUserMenuProps> = () => {
 
   const logout = async () => {
     
-  };
+  }
 
   return (
     <>
