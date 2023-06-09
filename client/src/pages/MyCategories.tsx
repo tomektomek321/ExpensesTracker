@@ -14,7 +14,7 @@ export default function MyCategories() {
 
   useEffect(() => {
     getCategoriesByUserId();
-  }, [])
+  }, []);
 
   const getCategoriesByUserId = () => {
     GetCategoriesByUserId("sad").then((val: Category[]) => {
