@@ -50,10 +50,10 @@ export default function Home() {
 
   const handleUpdateExpense = () => {
     const newExpenses = [...expsenses];
-    const a: Expense = newExpenses.find(c => c.id === nowEdit)!;
-    a.category = nowEditValue.category;
-    a.name = nowEditValue.name;
-    a.price = nowEditValue.price;
+    const foundedExpense: Expense = newExpenses.find(c => c.id === nowEdit)!;
+    foundedExpense.category = nowEditValue.category;
+    foundedExpense.name = nowEditValue.name;
+    foundedExpense.price = nowEditValue.price;
 
     setExpenses(newExpenses);
 

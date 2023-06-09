@@ -13,6 +13,7 @@ import {
 import { Expense } from '../../domains/models/Expense';
 import { Category } from '../../domains/models/Category';
 import { NewExpense } from '../../domains/models/NewExpense';
+import { emptyNewExpense } from '../../common/data/mocks';
 
 type NewExpenseFormProps = {
   expsenses: Expense[];
@@ -26,11 +27,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   categories,
 }) => {
 
-  const [newExpenseValue, setNewExpenseValue] =  useState<NewExpense>({
-    category: "",
-    name: "",
-    price: 0,
-  });
+  const [newExpenseValue, setNewExpenseValue] =  useState<NewExpense>(emptyNewExpense);
 
   const handleSetNewExpenseValue = (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setNewExpenseValue(prev => {
@@ -39,11 +36,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   }
   
   const handleClear = () => {
-    setNewExpenseValue({
-      category: "",
-      name: "",
-      price: 0,
-    });
+    setNewExpenseValue(emptyNewExpense);
   }
 
   const handleCreate = () => {
@@ -57,11 +50,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
     });
     setExpenses(newExpenses);
 
-    setNewExpenseValue({
-      category: "",
-      name: "",
-      price: 0,
-    });
+    setNewExpenseValue(emptyNewExpense);
   }
 
   return (
