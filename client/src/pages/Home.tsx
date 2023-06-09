@@ -93,13 +93,13 @@ export default function Home() {
         borderWidth="1px"
         rounded="lg"
         shadow="1px 1px 3px rgba(0,0,0,0.3)"
-        maxWidth={800}
+        maxWidth={1000}
         p={6}
         m="10px auto"
         as="form"
       >
         <Flex direction={'column'}>
-          <TableContainer width={'700px'}>
+          <TableContainer width={'1000px'}>
             <Table variant='striped' colorScheme='teal'>
               <Thead>
                 <Tr>
@@ -107,6 +107,8 @@ export default function Home() {
                   <Th>Name</Th>
                   <Th>Value</Th>
                   <Th>Category</Th>
+                  <Th>EDIT</Th>
+                  <Th>REMOVE</Th>
                 </Tr>
               </Thead>
               <Tbody>

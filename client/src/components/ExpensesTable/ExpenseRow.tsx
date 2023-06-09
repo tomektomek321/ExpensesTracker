@@ -77,12 +77,13 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
                 shadow="sm"
                 size="md"
                 w="full"
+                value={nowEditValue.category}
                 onChange={(e) => handleEditInputValue(e)}
                 rounded="md">
                   {
                     categories?.map(val => {
                       return(
-                        <option key={val.id}>{val.name}</option>
+                        <option key={val.id} value={val.name}>{val.name}</option>
                       )
                     })
                   }

@@ -25,7 +25,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   setExpenses,
   categories,
 }) => {
-  
+
   const [newExpenseValue, setNewExpenseValue] =  useState<NewExpense>({
     category: "",
     name: "",
@@ -74,14 +74,14 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           <FormLabel htmlFor="name" fontWeight={'normal'}>
             Name
           </FormLabel>
-          <Input name="name" placeholder="Name" border={'1px solid gray'} onChange={(e) => handleSetNewExpenseValue(e)} />
+          <Input name="name" value={newExpenseValue.name} placeholder="Name" border={'1px solid gray'} onChange={(e) => handleSetNewExpenseValue(e)} />
         </FormControl>
 
         <FormControl>
           <FormLabel htmlFor="price" fontWeight={'normal'}>
             Price
           </FormLabel>
-          <Input name="price" placeholder="price" border={'1px solid gray'} onChange={(e) => handleSetNewExpenseValue(e)} />
+          <Input name="price" value={newExpenseValue.price} placeholder="price" border={'1px solid gray'} onChange={(e) => handleSetNewExpenseValue(e)} />
         </FormControl>
 
         <FormControl as={GridItem}>
