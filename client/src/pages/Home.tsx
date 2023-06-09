@@ -11,16 +11,13 @@ import GetCategoriesByUserId from '../domains/categories/categories-gateway';
 import NewExpenseForm from '../components/newExpenseForm/NewExpenseForm';
 import { NewExpense } from '../domains/models/NewExpense';
 import ExpenseRow from '../components/ExpensesTable/ExpenseRow';
+import { emptyNewExpense } from '../common/data/mocks';
 
 export default function Home() {
   const [expsenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
-  const [nowEditValue, setNowEditValue] =  useState<NewExpense>({
-    category: "",
-    name: "",
-    price: 0,
-  });
+  const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
 
   useEffect(() => {
     getExpenses();
@@ -61,20 +58,12 @@ export default function Home() {
     setExpenses(newExpenses);
 
     setNowEdit(null);
-    setNowEditValue({
-      category: "",
-      name: "",
-      price: 0,
-    });
+    setNowEditValue(emptyNewExpense);
   }
 
   const handleCancel = () => {
     setNowEdit(null);
-    setNowEditValue({
-      category: "",
-      name: "",
-      price: 0,
-    });
+    setNowEditValue(emptyNewExpense);
   }
 
   const handleRemove = (id: string) => {
