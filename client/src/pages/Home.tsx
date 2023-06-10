@@ -12,6 +12,7 @@ import NewExpenseForm from '../components/newExpenseForm/NewExpenseForm';
 import { NewExpense } from '../domains/models/NewExpense';
 import ExpenseRow from '../components/ExpensesTable/ExpenseRow';
 import { emptyNewExpense } from '../common/data/mocks';
+import { changeDay } from '../common/utils/date-and-time/commn-util-date-and-time';
 
 export default function Home() {
   const [expsenses, setExpenses] = useState<Expense[]>([]);
@@ -20,17 +21,24 @@ export default function Home() {
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
   const [date, setDate] = useState<Date>(new Date());
   const [totalDay, setTotalDay] = useState<number>(0);
+  const [day, setDay] = useState<number>(0);
 
   useEffect(() => {
     getExpenses();
     getCategories();
   }, []);
 
+  useEffect(() => {
+    getExpenses();
+  }, [day]);
+
+
   const getExpenses = () => {
-    GetExpensesBy("sad", 0).then((val: Expense[]) => {
+    const nowDay = changeDay(day);
+    GetExpensesBy("sad", nowDay).then((val: Expense[]) => {
       setExpenses(val);
       countTotalDay(val);
-    })
+    });
   }
 
   const countTotalDay = (expenses: Expense[]) => {
