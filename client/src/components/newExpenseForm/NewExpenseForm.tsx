@@ -19,12 +19,14 @@ type NewExpenseFormProps = {
   expenses: Expense[];
   setExpenses: any;
   categories: Category[],
+  countTotalDay: any,
 };
 
 const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   expenses,
   setExpenses,
   categories,
+  countTotalDay
 }) => {
 
   const [newExpenseValue, setNewExpenseValue] =  useState<NewExpense>(emptyNewExpense);
@@ -34,7 +36,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
       return { ...prev, [ev.target.name]: ev.target.value };
     });
   }
-  
+
   const handleClear = () => {
     setNewExpenseValue(emptyNewExpense);
   }
@@ -45,12 +47,12 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
       id: "123213",
       name: newExpenseValue.name,
       category: newExpenseValue.category,
-      price: newExpenseValue.price,
+      price: parseFloat(newExpenseValue.price.toString()),
       date: new Date(),
       userId: "addd1"
     });
     setExpenses(newExpenses);
-
+    countTotalDay(newExpenses);
     setNewExpenseValue(emptyNewExpense);
   }
 

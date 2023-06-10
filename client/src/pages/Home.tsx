@@ -36,8 +36,8 @@ export default function Home() {
   const getExpenses = () => {
     const nowDay = changeDay(dayShift);
     GetExpensesBy("sad", nowDay).then((expenses_: Expense[]) => {
-      debugger;
-      setExpenses(expenses_);
+      
+      setExpenses(prev => expenses_);
       countTotalDay(expenses_);
     });
   }
@@ -122,24 +122,22 @@ export default function Home() {
       >
         <Box>
           <Text fontWeight={800} onClick={() => showDay(-1)}>
-            Poprzedni dzień
+            Previous day
           </Text>
         </Box>
         <Box>
           {displayDate()}
         </Box>
         <Box>
-            <Text fontWeight={800}>
-                {totalDay} zł
-            </Text>
-
+          <Text fontWeight={800}>
+            {totalDay} zł
+          </Text>
         </Box>
         <Box>
         <Text fontWeight={800} onClick={() => showDay(1)}>
-            Nastepny dzień
+            Next day
           </Text>
         </Box>
-
       </Flex>
       <Box
         borderWidth="1px"
@@ -150,50 +148,59 @@ export default function Home() {
         m="10px auto"
         as="form"
       >
-        <Flex direction={'column'}>
-          <TableContainer width={'1000px'}>
-            <Table variant='striped' colorScheme='teal'>
-              <Thead>
-                <Tr>
-                  <Th>#</Th>
-                  <Th>Name</Th>
-                  <Th>Value</Th>
-                  <Th>Category</Th>
-                  <Th>EDIT</Th>
-                  <Th>REMOVE</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {
-                  expenses.map((expense: Expense, idx: number) => {
-                    return(
-                      <ExpenseRow
-                        key={idx}
-                        idx={idx}
-                        expense={expense}
-                        nowEdit={nowEdit}
-                        categories={categories}
-                        handleEditInputValue={handleEditInputValue}
-                        nowEditValue={nowEditValue}
-                        handleCancel={handleCancel}
-                        handleUpdateExpense={handleUpdateExpense}
-                        handleRemove={handleRemove}
-                        handleEditCategory={handleEditCategory}
-                      />
-                    )
-                  })
-                }
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Flex>
-
+        {
+          expenses.length === 0 ? (
+            <>
+              <Text width={'1000px'} fontSize={25} textAlign={'center'}>
+                NO EXPENSES ADDED YET
+              </Text>
+            </>
+          ) : (
+            <Flex direction={'column'}>
+              <TableContainer width={'1000px'}>
+                <Table variant='striped' colorScheme='teal'>
+                  <Thead>
+                    <Tr>
+                      <Th>#</Th>
+                      <Th>Name</Th>
+                      <Th>Value</Th>
+                      <Th>Category</Th>
+                      <Th>EDIT</Th>
+                      <Th>REMOVE</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {
+                      expenses.map((expense: Expense, idx: number) => {
+                        return(
+                          <ExpenseRow
+                            key={idx}
+                            idx={idx}
+                            expense={expense}
+                            nowEdit={nowEdit}
+                            categories={categories}
+                            handleEditInputValue={handleEditInputValue}
+                            nowEditValue={nowEditValue}
+                            handleCancel={handleCancel}
+                            handleUpdateExpense={handleUpdateExpense}
+                            handleRemove={handleRemove}
+                            handleEditCategory={handleEditCategory}
+                          />
+                        )
+                      })
+                    }
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Flex>
+          )
+        }
         <NewExpenseForm 
           expenses={expenses}
           setExpenses={setExpenses}
           categories={categories}
+          countTotalDay={countTotalDay}
         />
-        
       </Box>
     </Flex>
   )
