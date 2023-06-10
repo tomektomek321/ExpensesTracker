@@ -4,5 +4,6 @@ export interface Expense {
   name: string;
   price: number;
   date: Date;
+  note?: string;
   userId: string;
 }

@@ -16,13 +16,13 @@ import { NewExpense } from '../../domains/models/NewExpense';
 import { emptyNewExpense } from '../../common/data/mocks';
 
 type NewExpenseFormProps = {
-  expsenses: Expense[];
+  expenses: Expense[];
   setExpenses: any;
   categories: Category[],
 };
 
 const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
-  expsenses,
+  expenses,
   setExpenses,
   categories,
 }) => {
@@ -40,7 +40,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   }
 
   const handleCreate = () => {
-    const newExpenses: Expense[] = [...expsenses];
+    const newExpenses: Expense[] = [...expenses];
     newExpenses.push({
       id: "123213",
       name: newExpenseValue.name,

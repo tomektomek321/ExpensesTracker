@@ -15,7 +15,7 @@ import { emptyNewExpense } from '../common/data/mocks';
 import { changeDay } from '../common/utils/date-and-time/commn-util-date-and-time';
 
 export default function Home() {
-  const [expsenses, setExpenses] = useState<Expense[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
@@ -35,15 +35,16 @@ export default function Home() {
 
   const getExpenses = () => {
     const nowDay = changeDay(dayShift);
-    GetExpensesBy("sad", nowDay).then((val: Expense[]) => {
-      setExpenses(val);
-      countTotalDay(val);
+    GetExpensesBy("sad", nowDay).then((expenses_: Expense[]) => {
+      debugger;
+      setExpenses(expenses_);
+      countTotalDay(expenses_);
     });
   }
 
-  const countTotalDay = (expenses: Expense[]) => {
+  const countTotalDay = (expenses_: Expense[]) => {
     let total: number = 0;
-    expsenses.forEach(expense => {
+    expenses_.forEach(expense => {
       total += expense.price;
     });
 
@@ -70,7 +71,7 @@ export default function Home() {
   const handleEditCategory = (id: string) => {
     setNowEdit(id);
 
-    const expense = expsenses.find(e => e.id === id)!;
+    const expense = expenses.find(e => e.id === id)!;
 
     setNowEditValue({
       category: expense.category,
@@ -80,7 +81,7 @@ export default function Home() {
   }
 
   const handleUpdateExpense = () => {
-    const newExpenses = [...expsenses];
+    const newExpenses = [...expenses];
     const foundedExpense: Expense = newExpenses.find(c => c.id === nowEdit)!;
     foundedExpense.category = nowEditValue.category;
     foundedExpense.name = nowEditValue.name;
@@ -164,7 +165,7 @@ export default function Home() {
               </Thead>
               <Tbody>
                 {
-                  expsenses.map((expense: Expense, idx: number) => {
+                  expenses.map((expense: Expense, idx: number) => {
                     return(
                       <ExpenseRow
                         key={idx}
@@ -188,7 +189,7 @@ export default function Home() {
         </Flex>
 
         <NewExpenseForm 
-          expsenses={expsenses}
+          expenses={expenses}
           setExpenses={setExpenses}
           categories={categories}
         />
