@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Flex,
-  Table, TableContainer, Tbody, Text, Th, Thead, Tr
+  Text,
 } from '@chakra-ui/react';
 import { Category } from '../domains/models/Category';
 import GetExpensesBy from '../domains/expenses/expenses-gateway';
@@ -10,9 +10,10 @@ import { Expense } from '../domains/models/Expense';
 import GetCategoriesByUserId from '../domains/categories/categories-gateway';
 import NewExpenseForm from '../components/newExpenseForm/NewExpenseForm';
 import { NewExpense } from '../domains/models/NewExpense';
-import ExpenseRow from '../components/ExpensesTable/ExpenseRow';
 import { emptyNewExpense } from '../common/data/mocks';
 import { changeDay } from '../common/utils/date-and-time/commn-util-date-and-time';
+import ExpensesTable from '../components/ExpensesTable/ExpensesTable';
+import ExpensesHeader from '../components/Home/ExpensesHeader';
 
 export default function Home() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -110,35 +111,11 @@ export default function Home() {
 
   return (
     <Flex justify="center" flexDirection={'column'} p="16px 0px">
-      <Flex
-        borderWidth="1px"
-        rounded="lg"
-        width={'100%'}
-        shadow="1px 1px 3px rgba(0,0,0,0.3)"
-        maxWidth={1000}
-        p={6}
-        m="10px auto"
-        justifyContent={'space-between'}
-      >
-        <Box>
-          <Text fontWeight={800} onClick={() => showDay(-1)}>
-            Previous day
-          </Text>
-        </Box>
-        <Box>
-          {displayDate()}
-        </Box>
-        <Box>
-          <Text fontWeight={800}>
-            {totalDay} zł
-          </Text>
-        </Box>
-        <Box>
-        <Text fontWeight={800} onClick={() => showDay(1)}>
-            Next day
-          </Text>
-        </Box>
-      </Flex>
+      <ExpensesHeader 
+        totalDay={totalDay}
+        displayDate={displayDate}
+        showDay={showDay}
+      />
       <Box
         borderWidth="1px"
         rounded="lg"
@@ -150,49 +127,21 @@ export default function Home() {
       >
         {
           expenses.length === 0 ? (
-            <>
-              <Text width={'1000px'} fontSize={25} textAlign={'center'}>
-                NO EXPENSES ADDED YET
-              </Text>
-            </>
+            <Text width={'1000px'} fontSize={25} textAlign={'center'}>
+              NO EXPENSES ADDED YET
+            </Text>
           ) : (
-            <Flex direction={'column'}>
-              <TableContainer width={'1000px'}>
-                <Table variant='striped' colorScheme='teal'>
-                  <Thead>
-                    <Tr>
-                      <Th>#</Th>
-                      <Th>Name</Th>
-                      <Th>Value</Th>
-                      <Th>Category</Th>
-                      <Th>EDIT</Th>
-                      <Th>REMOVE</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {
-                      expenses.map((expense: Expense, idx: number) => {
-                        return(
-                          <ExpenseRow
-                            key={idx}
-                            idx={idx}
-                            expense={expense}
-                            nowEdit={nowEdit}
-                            categories={categories}
-                            handleEditInputValue={handleEditInputValue}
-                            nowEditValue={nowEditValue}
-                            handleCancel={handleCancel}
-                            handleUpdateExpense={handleUpdateExpense}
-                            handleRemove={handleRemove}
-                            handleEditCategory={handleEditCategory}
-                          />
-                        )
-                      })
-                    }
-                  </Tbody>
-                </Table>
-              </TableContainer>
-            </Flex>
+            <ExpensesTable
+              expenses={expenses}
+              nowEdit={nowEdit}
+              categories={categories}
+              handleEditInputValue={handleEditInputValue}
+              nowEditValue={nowEditValue}
+              handleCancel={handleCancel}
+              handleUpdateExpense={handleUpdateExpense}
+              handleRemove={handleRemove}
+              handleEditCategory={handleEditCategory}
+            />
           )
         }
         <NewExpenseForm 
