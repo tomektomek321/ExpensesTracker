@@ -2,32 +2,54 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Flex,
-  Table, TableContainer, Tbody, Th, Thead, Tr
+  Text,
 } from '@chakra-ui/react';
 import { Category } from '../domains/models/Category';
-import GetExpensesBy from '../domains/expenses/categories-gateway';
+import GetExpensesBy from '../domains/expenses/expenses-gateway';
 import { Expense } from '../domains/models/Expense';
 import GetCategoriesByUserId from '../domains/categories/categories-gateway';
 import NewExpenseForm from '../components/newExpenseForm/NewExpenseForm';
 import { NewExpense } from '../domains/models/NewExpense';
-import ExpenseRow from '../components/ExpensesTable/ExpenseRow';
 import { emptyNewExpense } from '../common/data/mocks';
+import { changeDay } from '../common/utils/date-and-time/commn-util-date-and-time';
+import ExpensesTable from '../components/ExpensesTable/ExpensesTable';
+import ExpensesHeader from '../components/Home/ExpensesHeader';
 
 export default function Home() {
-  const [expsenses, setExpenses] = useState<Expense[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
+  const [date, setDate] = useState<Date>(new Date());
+  const [totalDay, setTotalDay] = useState<number>(0);
+  const [dayShift, setDayShift] = useState<number>(0);
 
   useEffect(() => {
     getExpenses();
     getCategories();
   }, []);
 
+  useEffect(() => {
+    getExpenses();
+  }, [dayShift]);
+
+
   const getExpenses = () => {
-    GetExpensesBy("sad", 0).then((val: Expense[]) => {
-      setExpenses(val);
-    })
+    const nowDay = changeDay(dayShift);
+    GetExpensesBy("sad", nowDay).then((expenses_: Expense[]) => {
+      
+      setExpenses(prev => expenses_);
+      countTotalDay(expenses_);
+    });
+  }
+
+  const countTotalDay = (expenses_: Expense[]) => {
+    let total: number = 0;
+    expenses_.forEach(expense => {
+      total += expense.price;
+    });
+
+    setTotalDay(total);
   }
 
   const getCategories = () => {
@@ -36,10 +58,21 @@ export default function Home() {
     })
   }
 
+  const showDay = (shift: number) => {
+    setDayShift(prev => prev + shift);
+    setDate(changeDay(dayShift + shift));
+  }
+
+  const displayDate = () => {
+    return <Text fontWeight={800}>
+            {date.getDate()} / {date.getMonth()} / {date.getFullYear()}
+          </Text>
+  }
+
   const handleEditCategory = (id: string) => {
     setNowEdit(id);
 
-    const expense = expsenses.find(e => e.id === id)!;
+    const expense = expenses.find(e => e.id === id)!;
 
     setNowEditValue({
       category: expense.category,
@@ -49,7 +82,7 @@ export default function Home() {
   }
 
   const handleUpdateExpense = () => {
-    const newExpenses = [...expsenses];
+    const newExpenses = [...expenses];
     const foundedExpense: Expense = newExpenses.find(c => c.id === nowEdit)!;
     foundedExpense.category = nowEditValue.category;
     foundedExpense.name = nowEditValue.name;
@@ -77,7 +110,12 @@ export default function Home() {
   }
 
   return (
-    <Flex justify="center" p="16px 0px">
+    <Flex justify="center" flexDirection={'column'} p="16px 0px">
+      <ExpensesHeader 
+        totalDay={totalDay}
+        displayDate={displayDate}
+        showDay={showDay}
+      />
       <Box
         borderWidth="1px"
         rounded="lg"
@@ -87,50 +125,31 @@ export default function Home() {
         m="10px auto"
         as="form"
       >
-        <Flex direction={'column'}>
-          <TableContainer width={'1000px'}>
-            <Table variant='striped' colorScheme='teal'>
-              <Thead>
-                <Tr>
-                  <Th>#</Th>
-                  <Th>Name</Th>
-                  <Th>Value</Th>
-                  <Th>Category</Th>
-                  <Th>EDIT</Th>
-                  <Th>REMOVE</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {
-                  expsenses.map((expense: Expense, idx: number) => {
-                    return(
-                      <ExpenseRow
-                        key={idx}
-                        idx={idx}
-                        expense={expense}
-                        nowEdit={nowEdit}
-                        categories={categories}
-                        handleEditInputValue={handleEditInputValue}
-                        nowEditValue={nowEditValue}
-                        handleCancel={handleCancel}
-                        handleUpdateExpense={handleUpdateExpense}
-                        handleRemove={handleRemove}
-                        handleEditCategory={handleEditCategory}
-                      />
-                    )
-                  })
-                }
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Flex>
-
+        {
+          expenses.length === 0 ? (
+            <Text width={'1000px'} fontSize={25} textAlign={'center'}>
+              NO EXPENSES ADDED YET
+            </Text>
+          ) : (
+            <ExpensesTable
+              expenses={expenses}
+              nowEdit={nowEdit}
+              categories={categories}
+              handleEditInputValue={handleEditInputValue}
+              nowEditValue={nowEditValue}
+              handleCancel={handleCancel}
+              handleUpdateExpense={handleUpdateExpense}
+              handleRemove={handleRemove}
+              handleEditCategory={handleEditCategory}
+            />
+          )
+        }
         <NewExpenseForm 
-          expsenses={expsenses}
+          expenses={expenses}
           setExpenses={setExpenses}
           categories={categories}
+          countTotalDay={countTotalDay}
         />
-        
       </Box>
     </Flex>
   )

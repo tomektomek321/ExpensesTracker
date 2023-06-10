@@ -16,15 +16,17 @@ import { NewExpense } from '../../domains/models/NewExpense';
 import { emptyNewExpense } from '../../common/data/mocks';
 
 type NewExpenseFormProps = {
-  expsenses: Expense[];
+  expenses: Expense[];
   setExpenses: any;
   categories: Category[],
+  countTotalDay: any,
 };
 
 const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
-  expsenses,
+  expenses,
   setExpenses,
   categories,
+  countTotalDay
 }) => {
 
   const [newExpenseValue, setNewExpenseValue] =  useState<NewExpense>(emptyNewExpense);
@@ -34,22 +36,23 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
       return { ...prev, [ev.target.name]: ev.target.value };
     });
   }
-  
+
   const handleClear = () => {
     setNewExpenseValue(emptyNewExpense);
   }
 
   const handleCreate = () => {
-    const newExpenses: Expense[] = [...expsenses];
+    const newExpenses: Expense[] = [...expenses];
     newExpenses.push({
-      id: "123213", 
-      name: newExpenseValue.name, 
+      id: "123213",
+      name: newExpenseValue.name,
       category: newExpenseValue.category,
-      price: newExpenseValue.price, 
-      userId: "123213"
+      price: parseFloat(newExpenseValue.price.toString()),
+      date: new Date(),
+      userId: "addd1"
     });
     setExpenses(newExpenses);
-
+    countTotalDay(newExpenses);
     setNewExpenseValue(emptyNewExpense);
   }
 
@@ -82,7 +85,8 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
             color="gray.700"
             _dark={{
               color: 'gray.50',
-            }}>
+            }}
+          >
             Category
           </FormLabel>
           <Select
@@ -96,14 +100,15 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
             size="md"
             w="full"
             onChange={(e) => handleSetNewExpenseValue(e)}
-            rounded="md">
-              {
-                categories?.map(val => {
-                  return(
-                    <option key={val.id}>{val.name}</option>
-                  )
-                })
-              }
+            rounded="md"
+          >
+            {
+              categories?.map(val => {
+                return(
+                  <option key={val.id}>{val.name}</option>
+                )
+              })
+            }
           </Select>
         </FormControl>
       </Flex>
