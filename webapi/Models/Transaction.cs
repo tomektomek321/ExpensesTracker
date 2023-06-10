@@ -6,7 +6,8 @@ using System.Collections.Generic;
 namespace webapi.Models {
     public class Transaction {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         public Guid UserId { get; set; }

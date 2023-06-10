@@ -5,7 +5,8 @@ using System;
 namespace webapi.Models {
     public class Subscription {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         public Guid UserId { get; set; }
