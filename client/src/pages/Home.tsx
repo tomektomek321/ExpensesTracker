@@ -21,7 +21,7 @@ export default function Home() {
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
   const [date, setDate] = useState<Date>(new Date());
   const [totalDay, setTotalDay] = useState<number>(0);
-  const [day, setDay] = useState<number>(0);
+  const [dayShift, setDayShift] = useState<number>(0);
 
   useEffect(() => {
     getExpenses();
@@ -30,11 +30,11 @@ export default function Home() {
 
   useEffect(() => {
     getExpenses();
-  }, [day]);
+  }, [dayShift]);
 
 
   const getExpenses = () => {
-    const nowDay = changeDay(day);
+    const nowDay = changeDay(dayShift);
     GetExpensesBy("sad", nowDay).then((val: Expense[]) => {
       setExpenses(val);
       countTotalDay(val);
@@ -54,6 +54,17 @@ export default function Home() {
     GetCategoriesByUserId("sad").then((val: Category[]) => {
       setCategories(val);
     })
+  }
+
+  const showDay = (shift: number) => {
+    setDayShift(prev => prev + shift);
+    setDate(changeDay(dayShift + shift));
+  }
+
+  const displayDate = () => {
+    return <Text fontWeight={800}>
+            {date.getDate()} / {date.getMonth()} / {date.getFullYear()}
+          </Text>
   }
 
   const handleEditCategory = (id: string) => {
@@ -109,18 +120,22 @@ export default function Home() {
         justifyContent={'space-between'}
       >
         <Box>
-          <Text fontWeight={800}>
+          <Text fontWeight={800} onClick={() => showDay(-1)}>
             Poprzedni dzień
           </Text>
         </Box>
         <Box>
-          <Text fontWeight={600}>
-            {date.getDate()} / {date.getMonth()} / {date.getFullYear()}
-          </Text>
+          {displayDate()}
         </Box>
         <Box>
-          <Text fontWeight={800}>
-            {totalDay} zł
+            <Text fontWeight={800}>
+                {totalDay} zł
+            </Text>
+
+        </Box>
+        <Box>
+        <Text fontWeight={800} onClick={() => showDay(1)}>
+            Nastepny dzień
           </Text>
         </Box>
 

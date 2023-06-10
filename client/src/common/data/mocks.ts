@@ -10,15 +10,9 @@ export const emptyNewExpense: NewExpense = {
 }
 
 export function getMockExpensesBy(userId: string, date: Date): Expense[] {
-   debugger;
   let a = mockExpenses;
   a = mockExpenses.filter(e => {
-
-    const itemDaty = e.date.getDate();
-    const nowDat = date.getDate();
-
     const sameDate = isTheSameDate(e.date, date);
-
     return sameDate;
   });
 
