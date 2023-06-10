@@ -42,11 +42,12 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   const handleCreate = () => {
     const newExpenses: Expense[] = [...expsenses];
     newExpenses.push({
-      id: "123213", 
-      name: newExpenseValue.name, 
+      id: "123213",
+      name: newExpenseValue.name,
       category: newExpenseValue.category,
-      price: newExpenseValue.price, 
-      userId: "123213"
+      price: newExpenseValue.price,
+      date: new Date(),
+      userId: "addd1"
     });
     setExpenses(newExpenses);
 
@@ -82,7 +83,8 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
             color="gray.700"
             _dark={{
               color: 'gray.50',
-            }}>
+            }}
+          >
             Category
           </FormLabel>
           <Select
@@ -96,14 +98,15 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
             size="md"
             w="full"
             onChange={(e) => handleSetNewExpenseValue(e)}
-            rounded="md">
-              {
-                categories?.map(val => {
-                  return(
-                    <option key={val.id}>{val.name}</option>
-                  )
-                })
-              }
+            rounded="md"
+          >
+            {
+              categories?.map(val => {
+                return(
+                  <option key={val.id}>{val.name}</option>
+                )
+              })
+            }
           </Select>
         </FormControl>
       </Flex>

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Flex,
-  Table, TableContainer, Tbody, Th, Thead, Tr
+  Table, TableContainer, Tbody, Text, Th, Thead, Tr
 } from '@chakra-ui/react';
 import { Category } from '../domains/models/Category';
-import GetExpensesBy from '../domains/expenses/categories-gateway';
+import GetExpensesBy from '../domains/expenses/expenses-gateway';
 import { Expense } from '../domains/models/Expense';
 import GetCategoriesByUserId from '../domains/categories/categories-gateway';
 import NewExpenseForm from '../components/newExpenseForm/NewExpenseForm';
@@ -18,6 +18,8 @@ export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
+  const [date, setDate] = useState<Date>(new Date());
+  const [totalDay, setTotalDay] = useState<number>(0);
 
   useEffect(() => {
     getExpenses();
@@ -27,7 +29,17 @@ export default function Home() {
   const getExpenses = () => {
     GetExpensesBy("sad", 0).then((val: Expense[]) => {
       setExpenses(val);
+      countTotalDay(val);
     })
+  }
+
+  const countTotalDay = (expenses: Expense[]) => {
+    let total: number = 0;
+    expsenses.forEach(expense => {
+      total += expense.price;
+    });
+
+    setTotalDay(total);
   }
 
   const getCategories = () => {
@@ -77,7 +89,34 @@ export default function Home() {
   }
 
   return (
-    <Flex justify="center" p="16px 0px">
+    <Flex justify="center" flexDirection={'column'} p="16px 0px">
+      <Flex
+        borderWidth="1px"
+        rounded="lg"
+        width={'100%'}
+        shadow="1px 1px 3px rgba(0,0,0,0.3)"
+        maxWidth={1000}
+        p={6}
+        m="10px auto"
+        justifyContent={'space-between'}
+      >
+        <Box>
+          <Text fontWeight={800}>
+            Poprzedni dzień
+          </Text>
+        </Box>
+        <Box>
+          <Text fontWeight={600}>
+            {date.getDate()} / {date.getMonth()} / {date.getFullYear()}
+          </Text>
+        </Box>
+        <Box>
+          <Text fontWeight={800}>
+            {totalDay} zł
+          </Text>
+        </Box>
+
+      </Flex>
       <Box
         borderWidth="1px"
         rounded="lg"
