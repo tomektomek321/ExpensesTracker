@@ -2,18 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 
-namespace webapi.Models {
-    public class Receipt {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+namespace webapi.Models
+{
+    public class Receipt
+    {
         public Guid Id { get; set; }
-
-        [Required]
         public Guid TransactionId { get; set; }
         public byte[] Image { get; set; }
-
-        // Navigation properties
-        [ForeignKey("TransactionId")]
-        public Transaction Transaction { get; set; }
     }
 }

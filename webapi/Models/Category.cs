@@ -6,16 +6,11 @@ using System.Transactions;
 
 namespace webapi.Models {
     public class Category {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-
-        [Required]
-        [MaxLength(50)]
         public string Name { get; set; }
-
-        // Navigation properties
-        public ICollection<Transaction> Transactions { get; set; }
-        public ICollection<Budget> Budgets { get; set; }
+        public Category(Data.Models.Category pCategory) {
+            this.Id = pCategory.Id;
+            this.Name = pCategory.Name;
+        }
     }
 }
