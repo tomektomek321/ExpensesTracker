@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using webapi.Models;
+using webapi.Data.Models;
 
-namespace webapi.Data {
+namespace webapi.Data
+{
     public class ExpensesDbContext : DbContext {
         public ExpensesDbContext(DbContextOptions<ExpensesDbContext> options)
             : base(options) {
