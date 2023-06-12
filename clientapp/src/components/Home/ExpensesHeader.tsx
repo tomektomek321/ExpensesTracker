@@ -15,7 +15,7 @@ const ExpensesHeader: React.FC<ExpenseRowProps> = ({
   totalDay,
   displayDate,
   showDay,
-    }) => {
+}) => {
   return (
     <Flex
       borderWidth="1px"
