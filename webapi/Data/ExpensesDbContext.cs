@@ -1,15 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using webapi.Models;
+using webapi.Data.Models;
 
-namespace webapi {
+namespace webapi.Data
+{
     public class ExpensesDbContext : DbContext {
+        public ExpensesDbContext(DbContextOptions<ExpensesDbContext> options)
+            : base(options) {
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Id)
