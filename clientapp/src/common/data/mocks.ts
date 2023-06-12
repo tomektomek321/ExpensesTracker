@@ -18,3 +18,5 @@ export function getMockExpensesBy(userId: string, date: Date): Expense[] {
 
   return a;
 }
+
+export const testUserId = "addd1";

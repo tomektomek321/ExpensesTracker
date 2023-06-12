@@ -1,13 +1,20 @@
+import { testUserId } from "../../common/data/mocks";
 import { mockExpenses } from "../../common/data/mocks/mockExpenses";
 import { isTheSameDate } from "../../common/utils/date-and-time/commn-util-date-and-time";
+import { makeRandomID } from "../../common/utils/randomID";
+import { period } from "../enums/Period";
+import { Budget } from "../models/Budget";
 import { Expense } from "../models/Expense";
 
 const expensesDbName = 'expenses';
+const budgetDbName = 'budget';
 
-export function GetExpensesBy(userId: string, date: Date): Promise<Expense[] | number> {
+export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], Budget] | number> {
   return new Promise(async (res, rej) => {
     try {
-      let data = await localStorage.getItem(expensesDbName)!;
+      // addTestBudget();
+      const budget: Budget = await GetBudget()!;
+      let data =  localStorage.getItem(expensesDbName)!;
 
       const expenses = convertDbExpensesToDomain(data);
 
@@ -15,7 +22,7 @@ export function GetExpensesBy(userId: string, date: Date): Promise<Expense[] | n
         const sameDate = isTheSameDate(e.date, date);
         return sameDate;
       });
-      res(response);
+      res([response, budget]);
 
     } catch(e) {
       console.log(e);
@@ -109,7 +116,7 @@ export function RemoveExpense(expenseId: string): Promise<number> {
   });
 }
 
-export function TestSave(): Promise<number> {
+export function addTestExpenses(): Promise<number> {
   return new Promise(async (res, rej) => {
     try {
       let data: Expense[] = mockExpenses;
@@ -117,6 +124,48 @@ export function TestSave(): Promise<number> {
       await localStorage.setItem(expensesDbName, JSON.stringify(data));
       console.log(1);
       res(1);
+
+    } catch(e) {
+      console.log(e);
+      rej(-1);
+    }
+  });
+}
+
+export function addTestBudget() {
+  const budget = new Budget({
+    id: makeRandomID(),
+    amount: 3500,
+    period: period.Monthly,
+    userId: testUserId,
+  });
+
+  localStorage.setItem(budgetDbName, JSON.stringify(budget));
+}
+
+
+export function GetBudget(): Promise<Budget> {
+  return new Promise(async (res, rej) => {
+    try {    
+      let budgetDbString = await localStorage.getItem(budgetDbName);
+      if(!budgetDbString) {
+
+        return new Budget({
+          id: makeRandomID(),
+          amount: 0,
+          period: period.Monthly,
+          userId: testUserId,
+        })
+      }
+      let budget = JSON.parse(budgetDbString);
+      let a = new Budget({
+        id: budget.id,
+        amount: budget.amount,
+        period: budget.period,
+        userId: budget.userId,
+      })
+      console.log(1);
+      res(a);
 
     } catch(e) {
       console.log(e);
