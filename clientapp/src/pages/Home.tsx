@@ -4,9 +4,8 @@ import {
   Flex,
   Text,
 } from '@chakra-ui/react';
-import { Category } from '../domains/models/Category';
-import GetExpensesBy from '../domains/expenses/expenses-gateway';
-import { Expense } from '../domains/models/Expense';
+import { ICategory } from '../domains/models/ICategory';
+import { GetExpensesBy, RemoveExpense, UpdateExpense } from '../domains/expenses/expenses-gateway';
 import GetCategoriesByUserId from '../domains/categories/categories-gateway';
 import NewExpenseForm from '../components/newExpenseForm/NewExpenseForm';
 import { NewExpense } from '../domains/models/NewExpense';
@@ -14,10 +13,11 @@ import { emptyNewExpense } from '../common/data/mocks';
 import { changeDay } from '../common/utils/date-and-time/commn-util-date-and-time';
 import ExpensesTable from '../components/ExpensesTable/ExpensesTable';
 import ExpensesHeader from '../components/Home/ExpensesHeader';
+import { Expense } from '../domains/models/Expense';
 
 export default function Home() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
   const [date, setDate] = useState<Date>(new Date());
@@ -36,24 +36,25 @@ export default function Home() {
 
   const getExpenses = () => {
     const nowDay = changeDay(dayShift);
-    GetExpensesBy("sad", nowDay).then((expenses_: Expense[]) => {
-      
-      setExpenses(prev => expenses_);
-      countTotalDay(expenses_);
+    GetExpensesBy("sad", nowDay).then((expenses_: Expense[] | number) => {
+      if(typeof expenses_ !== 'number' ) {
+        setExpenses(prev => expenses_);
+        countTotalDay(expenses_);
+      }
     });
   }
 
   const countTotalDay = (expenses_: Expense[]) => {
     let total: number = 0;
     expenses_.forEach(expense => {
-      total += expense.price;
+      total += expense.amount;
     });
 
     setTotalDay(total);
   }
 
   const getCategories = () => {
-    GetCategoriesByUserId("sad").then((val: Category[]) => {
+    GetCategoriesByUserId("sad").then((val: ICategory[]) => {
       setCategories(val);
     })
   }
@@ -76,22 +77,34 @@ export default function Home() {
 
     setNowEditValue({
       category: expense.category,
-      name: expense.name,
-      price: expense.price,
+      note: expense.note,
+      amount: expense.amount,
     });
   }
 
   const handleUpdateExpense = () => {
     const newExpenses = [...expenses];
-    const foundedExpense: Expense = newExpenses.find(c => c.id === nowEdit)!;
-    foundedExpense.category = nowEditValue.category;
-    foundedExpense.name = nowEditValue.name;
-    foundedExpense.price = nowEditValue.price;
+    const foundedExpense: number = newExpenses.findIndex(c => c.id === nowEdit)!;
 
-    setExpenses(newExpenses);
+    const newExpense = new Expense({ 
+      id: newExpenses[foundedExpense].id,
+      category: nowEditValue.category,
+      note: nowEditValue.note,
+      amount: parseFloat(nowEditValue.amount.toString()),
+      date: newExpenses[foundedExpense].date.toString(),
+      userId: newExpenses[foundedExpense].userId,
+    });
 
-    setNowEdit(null);
-    setNowEditValue(emptyNewExpense);
+    newExpenses.splice(foundedExpense, 1, newExpense);
+
+    UpdateExpense(newExpense).then((response: number) => {
+      if(response === 1) {
+        setExpenses(newExpenses);
+        countTotalDay(newExpenses);
+        setNowEdit(null);
+        setNowEditValue(emptyNewExpense);
+      }
+    });
   }
 
   const handleCancel = () => {
@@ -100,7 +113,11 @@ export default function Home() {
   }
 
   const handleRemove = (id: string) => {
-    setExpenses(prev => prev.filter(c => c.id !== id));
+    RemoveExpense(id).then((resp: number) => {
+      const newExpenses = [...expenses.filter(c => c.id !== id)];
+      setExpenses(newExpenses);
+      countTotalDay(newExpenses);
+    });
   }
 
   const handleEditInputValue = (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
