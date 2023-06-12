@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using webapi.ActionResults;
-using webapi.Data.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,11 +21,11 @@ namespace webapi.Controllers {
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Category>> GetAllCategories() {
+        public ActionResult<IEnumerable<Models.Category>> Get() {
             try {
-            return new OkObjectResult(_categoryManager.GetCategories());
+                return new OkObjectResult(_categoryManager.GetCategories());
             }
-            catch(Exception ex) {
+            catch (Exception ex) {
                 _logger.LogError(ex.Message, ex.StackTrace);
                 return StatusCode(500, ex.Message);
             }
@@ -35,7 +33,9 @@ namespace webapi.Controllers {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Category> GetCategoryById(Guid pId) {
+
+        [Route("{pId}")]
+        public ActionResult<Models.Category> GetCategoryById([FromRoute] Guid pId) {
             var category = _categoryManager.GetCategoryById(pId);
             if (null == category) {
                 return NotFound();
@@ -47,7 +47,7 @@ namespace webapi.Controllers {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Category> CreateCategory(Models.Category pCategory) {
+        public ActionResult<Models.Category> CreateCategory([FromBody]Models.Category pCategory) {
             try {
                 if (ModelState.IsValid) {
                     var category = _categoryManager.AddCategory(pCategory);
@@ -57,7 +57,8 @@ namespace webapi.Controllers {
                     return BadRequest(ModelState.ValidationState);
                 }
 
-            } catch(Exception ex) {
+            }
+            catch (Exception ex) {
                 return StatusCode(500, ex.Message);
             }
         }
