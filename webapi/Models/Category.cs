@@ -8,6 +8,8 @@ namespace webapi.Models {
     public class Category {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public Category() {
+        }
         public Category(Data.Models.Category pCategory) {
             this.Id = pCategory.Id;
             this.Name = pCategory.Name;
