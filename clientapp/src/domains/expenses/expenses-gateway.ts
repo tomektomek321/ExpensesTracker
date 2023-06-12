@@ -25,7 +25,7 @@ export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], B
       res([response, budget]);
 
     } catch(e) {
-      console.log(e);
+      console.log("GetExpensesBy error");
       rej(-1);
     }
   });
@@ -57,7 +57,7 @@ export function SaveExpense(expense: Expense): Promise<number> {
       res(1);
 
     } catch(e) {
-      console.log(e);
+      console.log("SaveExpense error");
       rej(-1);
     }
   });
@@ -88,7 +88,7 @@ export function UpdateExpense(expense: Expense): Promise<number> {
       res(1);
 
     } catch(e) {
-      console.log(e);
+      console.log("UpdateExpense error");
       rej(-1);
     }
   });
@@ -110,7 +110,7 @@ export function RemoveExpense(expenseId: string): Promise<number> {
       res(1);
 
     } catch(e) {
-      console.log(e);
+      console.log("RemoveExpense error");
       rej(-1);
     }
   });
@@ -126,7 +126,7 @@ export function addTestExpenses(): Promise<number> {
       res(1);
 
     } catch(e) {
-      console.log(e);
+      console.log("addTestExpenses error");
       rej(-1);
     }
   });
@@ -168,7 +168,7 @@ export function GetBudget(): Promise<Budget> {
       res(a);
 
     } catch(e) {
-      console.log(e);
+      console.log("GetBudget error");
       rej(-1);
     }
   });
