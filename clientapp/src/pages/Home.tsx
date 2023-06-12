@@ -14,6 +14,10 @@ import { changeDay } from '../common/utils/date-and-time/commn-util-date-and-tim
 import ExpensesTable from '../components/ExpensesTable/ExpensesTable';
 import ExpensesHeader from '../components/Home/ExpensesHeader';
 import { Expense } from '../domains/models/Expense';
+import CalendarBudgetHeader from '../components/Home/CalendarBudgetHeader';
+import { useRecoilState } from 'recoil';
+import { BudgetState, budgetState } from '../atoms/BudgetAtom';
+import { Budget } from '../domains/models/Budget';
 
 export default function Home() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -24,22 +28,30 @@ export default function Home() {
   const [totalDay, setTotalDay] = useState<number>(0);
   const [dayShift, setDayShift] = useState<number>(0);
 
+  const [budgetRecoil, setBudgetState] = useRecoilState(budgetState);
+
   useEffect(() => {
-    getExpenses();
+    getExpensesAndBudget();
     getCategories();
   }, []);
 
   useEffect(() => {
-    getExpenses();
+    getExpensesAndBudget();
   }, [dayShift]);
 
 
-  const getExpenses = () => {
+  const getExpensesAndBudget = () => {
     const nowDay = changeDay(dayShift);
-    GetExpensesBy("sad", nowDay).then((expenses_: Expense[] | number) => {
+    GetExpensesBy("sad", nowDay).then((expenses_: [Expense[], Budget] | number) => {
       if(typeof expenses_ !== 'number' ) {
-        setExpenses(prev => expenses_);
-        countTotalDay(expenses_);
+        setExpenses(prev => expenses_[0]);
+        countTotalDay(expenses_[0]);
+
+        setBudgetState((prev: BudgetState) => ({
+          ...prev,
+          amount: expenses_[1].amount,
+          period: expenses_[1].period,
+        }));
       }
     });
   }
@@ -128,6 +140,10 @@ export default function Home() {
 
   return (
     <Flex justify="center" flexDirection={'column'} p="16px 0px">
+      <CalendarBudgetHeader
+        budgetRecoil={budgetRecoil}
+        date={date}
+      />
       <ExpensesHeader 
         totalDay={totalDay}
         displayDate={displayDate}

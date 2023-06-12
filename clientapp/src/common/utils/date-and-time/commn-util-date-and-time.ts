@@ -17,3 +17,7 @@ export function changeDay(dayShift: number): Date {
   
   return previousDate;
 }
+
+export function getNumberOfDaysForMonth(year: number, month: number): number {
+  return new Date(year, month, 0).getDate();
+}
