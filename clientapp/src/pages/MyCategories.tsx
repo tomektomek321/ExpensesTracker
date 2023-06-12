@@ -1,13 +1,13 @@
 import { Box, Button, Flex, Input, Spinner, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import GetCategoriesByUserId from '../domains/categories/categories-gateway';
-import { Category } from '../domains/models/Category';
+import { ICategory } from '../domains/models/ICategory';
 import { MdBuild } from 'react-icons/md';
 
 export default function MyCategories() {
 
   const [loading, setLoading] =  useState<boolean>(true);
-  const [categories, setCategories] =  useState<Category[]>([]);
+  const [categories, setCategories] =  useState<ICategory[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<string>("");
   const [newCategoryValue, setNewCategoryValue] =  useState<string>("");
@@ -17,7 +17,7 @@ export default function MyCategories() {
   }, []);
 
   const getCategoriesByUserId = () => {
-    GetCategoriesByUserId("sad").then((val: Category[]) => {
+    GetCategoriesByUserId("sad").then((val: ICategory[]) => {
       setCategories(val);
       setLoading(false);
     })
@@ -78,7 +78,7 @@ export default function MyCategories() {
           </Thead>
           <Tbody>
             {
-              categories.map((val: Category, idx: number) => {
+              categories.map((val: ICategory, idx: number) => {
                 return(
                   <Tr key={val.id}>
                     <Td>{idx}</Td>
