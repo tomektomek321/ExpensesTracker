@@ -33,6 +33,7 @@ namespace webapi.Controllers {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+
         [Route("{pId}")]
         public ActionResult<Models.Category> GetCategoryById([FromRoute] Guid pId) {
             var category = _categoryManager.GetCategoryById(pId);

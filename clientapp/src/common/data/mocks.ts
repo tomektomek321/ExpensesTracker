@@ -5,8 +5,8 @@ import { mockExpenses } from "./mocks/mockExpenses";
 
 export const emptyNewExpense: NewExpense = {
   category: "",
-  name: "",
-  price: 0,
+  note: "",
+  amount: 0,
 }
 
 export function getMockExpensesBy(userId: string, date: Date): Expense[] {

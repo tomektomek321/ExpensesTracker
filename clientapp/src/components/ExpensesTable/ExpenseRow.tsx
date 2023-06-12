@@ -7,7 +7,7 @@ import {
   Tr
 } from '@chakra-ui/react';
 import { Expense } from '../../domains/models/Expense';
-import { Category } from '../../domains/models/Category';
+import { ICategory } from '../../domains/models/ICategory';
 import { NewExpense } from '../../domains/models/NewExpense';
 import { MdBuild } from 'react-icons/md';
 
@@ -15,7 +15,7 @@ type ExpenseRowProps = {
   idx: number;
   expense: Expense;
   nowEdit: string | null;
-  categories: Category[];
+  categories: ICategory[];
   handleEditInputValue: (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
   nowEditValue: NewExpense,
   handleCancel: () => void,
@@ -42,10 +42,10 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
       <Td>
         {
           nowEdit == null || nowEdit !== expense.id ? (
-            expense.name
+            expense.note
           ) : (
             <>
-              <Input border={'1px solid gray'} focusBorderColor='pink.400' name="name" htmlSize={6} width='auto' color='teal' value={nowEditValue.name} onChange={(e) => { handleEditInputValue(e);  }} />
+              <Input border={'1px solid gray'} focusBorderColor='pink.400' name="note" htmlSize={6} width='auto' color='teal' value={nowEditValue.note} onChange={(e) => { handleEditInputValue(e);  }} />
             </>
           )
         }
@@ -53,10 +53,10 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
       <Td>
         {
           nowEdit == null || nowEdit !== expense.id ? (
-            expense.price
+            expense.amount
           ) : (
             <>
-              <Input border={'1px solid gray'} focusBorderColor='pink.400' name='price' htmlSize={1} width='auto' color='teal' value={nowEditValue.price} onChange={(e) => { handleEditInputValue(e); }} />
+              <Input border={'1px solid gray'} focusBorderColor='pink.400' name='amount' htmlSize={1} width='auto' color='teal' value={nowEditValue.amount} onChange={(e) => { handleEditInputValue(e); }} />
             </>
           )
         }

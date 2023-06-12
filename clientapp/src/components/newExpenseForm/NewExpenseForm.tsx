@@ -11,14 +11,16 @@ import {
   Select,
 } from '@chakra-ui/react';
 import { Expense } from '../../domains/models/Expense';
-import { Category } from '../../domains/models/Category';
+import { ICategory } from '../../domains/models/ICategory';
 import { NewExpense } from '../../domains/models/NewExpense';
 import { emptyNewExpense } from '../../common/data/mocks';
+import { SaveExpense } from '../../domains/expenses/expenses-gateway';
+import { makeRandomID } from '../../common/utils/randomID';
 
 type NewExpenseFormProps = {
   expenses: Expense[];
   setExpenses: any;
-  categories: Category[],
+  categories: ICategory[],
   countTotalDay: any,
 };
 
@@ -43,17 +45,25 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
 
   const handleCreate = () => {
     const newExpenses: Expense[] = [...expenses];
-    newExpenses.push({
-      id: "123213",
-      name: newExpenseValue.name,
+
+    const ob = new Expense({
+      id: makeRandomID(),
+      note: newExpenseValue.note,
       category: newExpenseValue.category,
-      price: parseFloat(newExpenseValue.price.toString()),
-      date: new Date(),
+      amount: parseFloat(newExpenseValue.amount.toString()),
+      date: new Date().toString(),
       userId: "addd1"
     });
-    setExpenses(newExpenses);
-    countTotalDay(newExpenses);
-    setNewExpenseValue(emptyNewExpense);
+
+    newExpenses.push(ob);
+
+    SaveExpense(ob).then((response: number) => {
+      if(response === 1) {
+        setExpenses(newExpenses);
+        countTotalDay(newExpenses);
+        setNewExpenseValue(emptyNewExpense);
+      }
+    });
   }
 
   return (
@@ -63,17 +73,17 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           Add Next Expense
         </Box>
         <FormControl mr="5%">
-          <FormLabel htmlFor="name" fontWeight={'normal'}>
+          <FormLabel htmlFor="note" fontWeight={'normal'}>
             Name
           </FormLabel>
-          <Input name="name" value={newExpenseValue.name} placeholder="Name" border={'1px solid gray'} onChange={(e) => handleSetNewExpenseValue(e)} />
+          <Input name="note" value={newExpenseValue.note} placeholder="Note" border={'1px solid gray'} onChange={(e) => handleSetNewExpenseValue(e)} />
         </FormControl>
 
         <FormControl>
-          <FormLabel htmlFor="price" fontWeight={'normal'}>
-            Price
+          <FormLabel htmlFor="amount" fontWeight={'normal'}>
+            Amount
           </FormLabel>
-          <Input name="price" value={newExpenseValue.price} placeholder="price" border={'1px solid gray'} onChange={(e) => handleSetNewExpenseValue(e)} />
+          <Input name="amount" value={newExpenseValue.amount} placeholder="amount" border={'1px solid gray'} onChange={(e) => handleSetNewExpenseValue(e)} />
         </FormControl>
 
         <FormControl as={GridItem}>

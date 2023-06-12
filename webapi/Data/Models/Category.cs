@@ -17,6 +17,5 @@ namespace webapi.Data.Models {
         // Navigation properties
         public ICollection<Transaction> Transactions { get; set; }
         public ICollection<Budget> Budgets { get; set; }
-
     }
 }

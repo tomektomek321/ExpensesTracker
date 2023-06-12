@@ -1,5 +1,5 @@
 export interface NewExpense {
-  name: string;
+  note: string;
   category: string;
-  price: number;
+  amount: number;
 }
