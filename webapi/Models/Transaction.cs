@@ -11,5 +11,16 @@ namespace webapi.Models {
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
         public string Note { get; set; }
+        public Transaction() {
+
+        }
+        public Transaction(Data.Models.Transaction pTransaction) {
+            this.Id = pTransaction.Id;
+            this.UserId = pTransaction.UserId;
+            this.CategoryId = pTransaction.CategoryId;
+            this.Amount = pTransaction.Amount;
+            this.Date = pTransaction.Date;
+            this.Note = pTransaction.Note;
+        }
     }
 }
