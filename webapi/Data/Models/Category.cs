@@ -17,10 +17,5 @@ namespace webapi.Data.Models {
         // Navigation properties
         public ICollection<Transaction> Transactions { get; set; }
         public ICollection<Budget> Budgets { get; set; }
-        public Category(webapi.Models.Category pCategory)
-        {
-            this.Id = pCategory.Id;
-            this.Name = pCategory.Name;
-        }
     }
 }

@@ -36,7 +36,13 @@ namespace webapi.Data
                 .WithMany(c => c.Transactions)
                 .HasForeignKey(t => t.CategoryId)
                 .HasConstraintName("FK_Transactions_Categories");
+            modelBuilder.Entity<Transaction>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
 
+            modelBuilder.Entity<Budget>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
             modelBuilder.Entity<Budget>()
                 .HasIndex(b => new { b.UserId, b.CategoryId })
                 .HasDatabaseName("idx_budgets_userid_categoryid");
@@ -60,6 +66,9 @@ namespace webapi.Data
                 .HasForeignKey(r => r.TransactionId)
                 .HasConstraintName("FK_Receipts_Transactions");
 
+            modelBuilder.Entity<Subscription>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
             modelBuilder.Entity<Subscription>()
                 .HasIndex(s => s.UserId)
                 .HasDatabaseName("idx_subscriptions_userid");
