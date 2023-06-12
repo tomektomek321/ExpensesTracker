@@ -7,15 +7,22 @@ import {
 
 type ExpenseRowProps = {
   totalDay: number;
-  displayDate: any;
+  date: Date;
   showDay: (shift: number) => void;
 };
 
 const ExpensesHeader: React.FC<ExpenseRowProps> = ({
   totalDay,
-  displayDate,
+  date,
   showDay,
 }) => {
+
+  const displayDate = () => {
+    return <Text fontWeight={800}>
+            {date.getDate()} / {date.getMonth()} / {date.getFullYear()}
+          </Text>
+  }
+
   return (
     <Flex
       borderWidth="1px"

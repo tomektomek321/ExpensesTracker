@@ -12,7 +12,7 @@ const budgetDbName = 'budget';
 export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], Budget] | number> {
   return new Promise(async (res, rej) => {
     try {
-      addTestBudget();
+      // addTestBudget();
       const budget: Budget = await GetBudget()!;
       let data =  localStorage.getItem(expensesDbName)!;
 
@@ -116,7 +116,7 @@ export function RemoveExpense(expenseId: string): Promise<number> {
   });
 }
 
-export function TestSave(): Promise<number> {
+export function addTestExpenses(): Promise<number> {
   return new Promise(async (res, rej) => {
     try {
       let data: Expense[] = mockExpenses;
@@ -147,7 +147,16 @@ export function addTestBudget() {
 export function GetBudget(): Promise<Budget> {
   return new Promise(async (res, rej) => {
     try {    
-      let budgetDbString = await localStorage.getItem(budgetDbName)!;
+      let budgetDbString = await localStorage.getItem(budgetDbName);
+      if(!budgetDbString) {
+
+        return new Budget({
+          id: makeRandomID(),
+          amount: 0,
+          period: period.Monthly,
+          userId: testUserId,
+        })
+      }
       let budget = JSON.parse(budgetDbString);
       let a = new Budget({
         id: budget.id,

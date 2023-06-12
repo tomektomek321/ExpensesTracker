@@ -18,6 +18,7 @@ const CalendarBudgetHeader: React.FC<CalendarBudgetProps> = ({
 }) => {
 
   const getDayBudget = (): number => {
+
     if(budgetRecoil.amount) {
       const a = getNumberOfDaysForMonth(date.getFullYear(), date.getMonth());
       const aFixed = a.toFixed(2);
@@ -28,41 +29,33 @@ const CalendarBudgetHeader: React.FC<CalendarBudgetProps> = ({
 
     return 0;
   }
+
   return (
     <Flex
-      borderWidth="1px"
       rounded="lg"
       width={'100%'}
-      shadow="1px 1px 3px rgba(0,0,0,0.3)"
       maxWidth={1000}
-      p={6}
       m="10px auto"
       justifyContent={'space-between'}
     >
       <Box>
         <Flex>
-          <Text fontWeight={800} pr={3}>
-            Week view
+          <Text fontWeight={800} pr={3} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6}>
+            Weekly view
           </Text>
-          <Text fontWeight={800} pl={3}>
+          <Text fontWeight={800} pl={3} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6}>
             Month view
           </Text>
-
         </Flex>
       </Box>
       <Box>
-        <Text fontWeight={800} pl={3}>
-          Budget: {budgetRecoil.amount}
+        <Text fontWeight={800} pl={3} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6}>
+          {budgetRecoil.period} Budget: {budgetRecoil.amount || 0}
         </Text>
       </Box>
       <Box>
-        <Text fontWeight={800}>
-          { getDayBudget() } zł
-        </Text>
-      </Box>
-      <Box>
-        <Text fontWeight={800}>
-          Next day
+        <Text fontWeight={800} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6}>
+          Budget per day: { getDayBudget() } zł
         </Text>
       </Box>
     </Flex>

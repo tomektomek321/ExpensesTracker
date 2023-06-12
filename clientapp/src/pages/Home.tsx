@@ -76,12 +76,6 @@ export default function Home() {
     setDate(changeDay(dayShift + shift));
   }
 
-  const displayDate = () => {
-    return <Text fontWeight={800}>
-            {date.getDate()} / {date.getMonth()} / {date.getFullYear()}
-          </Text>
-  }
-
   const handleEditCategory = (id: string) => {
     setNowEdit(id);
 
@@ -144,9 +138,9 @@ export default function Home() {
         budgetRecoil={budgetRecoil}
         date={date}
       />
-      <ExpensesHeader 
+      <ExpensesHeader
         totalDay={totalDay}
-        displayDate={displayDate}
+        date={date}
         showDay={showDay}
       />
       <Box
