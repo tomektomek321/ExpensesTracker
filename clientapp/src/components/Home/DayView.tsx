@@ -24,15 +24,14 @@ export default function DayView() {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
-  const [date, setDate] = useState<Date>(new Date());
+  // const [date, setDate] = useState<Date>(new Date());
   const [totalDay, setTotalDay] = useState<number>(0);
 
   const [budgetRecoil, setBudgetState] = useRecoilState(budgetState);
   const [appRecoil, setAppState] = useRecoilState(appState);
 
   useEffect(() => {
-    setDate(appRecoil.date);
-    // getExpensesAndBudget();
+    // setDate(appRecoil.date);
     getCategories();
 
     
@@ -40,12 +39,12 @@ export default function DayView() {
 
   useEffect(() => {
     getExpensesAndBudget();
-  }, [date]);
+  }, [appRecoil.date]);
 
 
   const getExpensesAndBudget = () => {
     // const nowDay = changeDay(dayShift);
-    GetExpensesBy("sad", date).then((expenses_: [Expense[], Budget] | number) => {
+    GetExpensesBy("sad", appRecoil.date).then((expenses_: [Expense[], Budget] | number) => {
       if(typeof expenses_ !== 'number' ) {
         setExpenses(prev => expenses_[0]);
         countTotalDay(expenses_[0]);
@@ -75,10 +74,8 @@ export default function DayView() {
   }
 
   const showDay = (shift: number) => {
-    // setDayShift(prev => prev + shift);
     const day = changeDay(appRecoil.date, shift) 
-    setDate(day);
-    debugger;
+    // setDate(day);
     setAppState(prev => {
       return {
         ...prev,
@@ -148,7 +145,7 @@ export default function DayView() {
 
       <ExpensesHeader
         totalDay={totalDay}
-        date={date}
+        date={appRecoil.date}
         showDay={showDay}
       />
       <Box

@@ -29,9 +29,7 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
 
   const setColor = (): string => {
     const numberOfDays = getNumberOfDaysForMonth(appRecoil.date);
-    console.log(numberOfDays);
-    
-    
+  
     const b = countDayBudget(numberOfDays, budgetRecoil.amount!);
     const c = sumDayBudget();
     const x = countDayBudgetPercentage(b, c);
@@ -41,8 +39,8 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
 
   const showDay = () => {
     let setDay = appRecoil.date.setDate(day);
-    let a  = new Date(setDay);
-    debugger;
+    let a = new Date(setDay);
+
     setAppState(prev => {
       return {
         ...prev,
@@ -51,7 +49,6 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
       }
     })
   }
-
 
   return (
     <Flex
@@ -70,15 +67,6 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
       <Box>Day {day}</Box>
       <Flex flexDirection={'column'}>
         { sumDayBudget() } zł
-        {/* {
-          expenses.map((expense: Expense, idx: number) => {
-            return(
-              <Flex key={idx}>
-                {expense.amount}
-              </Flex>
-            )
-          })
-        } */}
       </Flex>
     </Flex>
   )
