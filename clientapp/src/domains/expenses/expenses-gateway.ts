@@ -1,6 +1,6 @@
 import { testUserId } from "../../common/data/mocks";
 import { mockExpenses } from "../../common/data/mocks/mockExpenses";
-import { isTheSameDate } from "../../common/utils/date-and-time/commn-util-date-and-time";
+import { getNumberOfDaysForMonth, isTheSameDate, isTheSameMonth } from "../../common/utils/date-and-time/commn-util-date-and-time";
 import { makeRandomID } from "../../common/utils/randomID";
 import { period } from "../enums/Period";
 import { Budget } from "../models/Budget";
@@ -30,6 +30,60 @@ export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], B
     }
   });
 }
+
+export interface DayExpenses {
+  day: number;
+  expenses: Expense[];
+}
+
+export function GetMonthExpensesBy(userId: string, date: Date): Promise<DayExpenses[] | number> {
+  return new Promise(async (res, rej) => {
+    try {
+      let dbData = localStorage.getItem(expensesDbName)!;
+
+      const data = convertDbExpensesToDomain(dbData);
+
+      let expenses = data.filter(e => {
+        const sameDate = isTheSameMonth(e.date, date);
+        return sameDate;
+      });
+
+      const numberOfDays = getNumberOfDaysForMonth(date);
+
+      const dayExpenses: DayExpenses[] = [];
+
+      for(let i = 1; i < numberOfDays; i++) {
+
+        const date1 = new Date();
+          date1.setDate(i);
+          date1.setMonth(date.getMonth());
+        
+        const day = expenses.filter(e => {
+          const sameDate = isTheSameDate(date1, e.date);
+          return sameDate;
+        });
+
+        const d: DayExpenses = {
+          day: i,
+          expenses: day,
+        }
+
+        dayExpenses.push(d);
+      }
+      console.log(dayExpenses);
+      res(dayExpenses);
+
+    } catch(e) {
+      console.log("GetExpensesBy error");
+      rej(-1);
+    }
+  });
+}
+
+
+
+
+
 
 function convertDbExpensesToDomain(data: string): Expense[] {
   const response: Expense[] = [];
