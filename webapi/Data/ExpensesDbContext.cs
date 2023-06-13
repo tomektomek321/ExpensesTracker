@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using webapi.Data.Models;
 
 namespace webapi.Data
 {
-    public class ExpensesDbContext : DbContext {
+    public class ExpensesDbContext : IdentityDbContext<User, Role, string> {
         public ExpensesDbContext(DbContextOptions<ExpensesDbContext> options)
             : base(options) {
         }
@@ -13,11 +14,19 @@ namespace webapi.Data
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Id)
                 .HasDatabaseName("idx_users_id");
+
+            modelBuilder.Entity<User>()
+                .HasMany(r => r.Roles);
+
+            modelBuilder.Entity<Role>()
+                .HasMany(r => r.Users);
 
             modelBuilder.Entity<Category>()
                 .HasIndex(c => c.Id)
@@ -64,7 +73,9 @@ namespace webapi.Data
                 .HasOne(r => r.Transaction)
                 .WithMany(t => t.Receipts)
                 .HasForeignKey(r => r.TransactionId)
-                .HasConstraintName("FK_Receipts_Transactions");
+                .HasConstraintName("FK_Receipts_Transactions"); 
+            
+            
 
             modelBuilder.Entity<Subscription>()
                 .Property(p => p.Amount)
@@ -77,6 +88,7 @@ namespace webapi.Data
                 .WithMany(u => u.Subscriptions)
                 .HasForeignKey(s => s.UserId)
                 .HasConstraintName("FK_Subscriptions_Users");
+
         }
     }
 }

@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 
 namespace webapi.Controllers {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TransactionsController : ControllerBase {
@@ -20,9 +23,10 @@ namespace webapi.Controllers {
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Models.Transaction>> Get([FromQuery(Name = "date")] DateTime? pTransactionsDate ) {
+        public ActionResult<IEnumerable<Models.Transaction>> Get([FromQuery(Name = "date")] DateTime? pTransactionsDate) {
             try {
-                return new OkObjectResult(_transactionsManager.GetTransacations(pTransactionsDate));
+                string userId = GetUserId();
+                return new OkObjectResult(_transactionsManager.GetTransacations(pTransactionsDate, userId));
             }
             catch (Exception ex) {
                 _logger.LogError(ex.Message, ex.StackTrace);
@@ -34,7 +38,8 @@ namespace webapi.Controllers {
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{pId}")]
         public ActionResult<Models.Category> GetTransactionById([FromRoute] Guid pId) {
-            var category = _transactionsManager.GetTransactionById(pId);
+            string userId = GetUserId();
+            var category = _transactionsManager.GetTransactionById(pId, userId);
             if (null == category) {
                 return NotFound();
             }
@@ -45,10 +50,11 @@ namespace webapi.Controllers {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Models.Category> CreateCategory([FromBody]Models.Transaction pTransaction) {
+        public ActionResult<Models.Category> Post([FromBody] Models.Transaction pTransaction) {
             try {
                 if (ModelState.IsValid) {
-                    var transaction = _transactionsManager.AddTransaction(pTransaction);
+                    string userId = GetUserId();
+                    var transaction = _transactionsManager.AddTransaction(pTransaction, userId);
                     return new OkObjectResult(transaction);
                 }
                 else {
@@ -59,6 +65,26 @@ namespace webapi.Controllers {
             catch (Exception ex) {
                 return StatusCode(500, ex.Message);
             }
+        }
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("{pId}")]
+        public ActionResult Delete([FromRoute] Guid pId) {
+            try {
+                string userId = GetUserId();
+                _transactionsManager.DeleteTransaction(pId, userId);
+                return new NoContentResult();
+            }
+            catch (KeyNotFoundException ex) {
+                return new NotFoundResult();
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        private string GetUserId() {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier); 
         }
     }
 }
