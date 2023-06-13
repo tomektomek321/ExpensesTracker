@@ -6,20 +6,20 @@ import {
 } from '@chakra-ui/react';
 import { budgetState } from '../../atoms/BudgetAtom';
 import { getNumberOfDaysForMonth } from '../../common/utils/date-and-time/commn-util-date-and-time';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { appState } from '../../atoms/AppAtom';
 import { ViewType } from '../../domains/enums/ViewType';
 import { countDayBudget } from '../../common/utils/budget/common-util-budget';
 
 const CalendarBudgetHeader: React.FC = () => {
-  const [budgetRecoil, setBudgetState] = useRecoilState(budgetState);
+  const budgetRecoil = useRecoilValue(budgetState);
   const [appRecoil, setAppState] = useRecoilState(appState);
 
   const getDayBudget = (): number => {
     if(budgetRecoil.amount) {
-      const a = getNumberOfDaysForMonth(appRecoil.date);
-      const b = countDayBudget(a, budgetRecoil.amount);
-      return parseFloat(b.toFixed(2));
+      const numOfDays = getNumberOfDaysForMonth(appRecoil.date);
+      const dayBudget = countDayBudget(numOfDays, budgetRecoil.amount);
+      return parseFloat(dayBudget.toFixed(2));
     }
 
     return 0;

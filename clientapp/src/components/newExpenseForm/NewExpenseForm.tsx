@@ -33,7 +33,6 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   countTotalDay
 }) => {
   const appRecoil = useRecoilValue(appState);
-
   const [newExpenseValue, setNewExpenseValue] =  useState<NewExpense>(emptyNewExpense);
 
   const handleSetNewExpenseValue = (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

@@ -22,7 +22,6 @@ export function isTheSameMonth(date1: Date, date2: Date): boolean {
 }
 
 export function changeDay(date: Date, dayShift: number): Date {
-
   const previousDate = new Date(date.getTime());
   previousDate.setDate(previousDate.getDate() + dayShift);
   
@@ -30,7 +29,6 @@ export function changeDay(date: Date, dayShift: number): Date {
 }
 
 export function setDay(date: Date, day: number): Date {
-
   const previousDate = new Date(date.getTime());
   previousDate.setDate(day);
   

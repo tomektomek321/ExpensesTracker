@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { appState } from '../../atoms/AppAtom';
 import { DayExpenses, GetMonthExpensesBy } from '../../domains/expenses/expenses-gateway';
 import { testUserId } from '../../common/data/mocks';
@@ -8,7 +8,7 @@ import DayOfMonth from './DayOfMonth';
 
 export default function MonthlyView() {
 
-  const [appRecoil, setAppState] = useRecoilState(appState);
+  const appRecoil = useRecoilValue(appState);
   const [monthExpenses, setMonthExpenses] = useState<DayExpenses[]>([]);
 
   useEffect(() => {

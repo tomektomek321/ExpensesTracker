@@ -9,7 +9,6 @@ import WeeklyView from '../components/Home/WeeklyView';
 import CalendarBudgetHeader from '../components/Home/CalendarBudgetHeader';
 
 export default function Home() {
-
   const appRecoil = useRecoilValue(appState);
   
   return (

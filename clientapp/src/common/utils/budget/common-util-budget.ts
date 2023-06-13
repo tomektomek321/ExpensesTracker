@@ -2,16 +2,13 @@ export function countDayBudgetPercentage(percentageDayBudget: number, daySpend: 
   if(!daySpend) {
     return 0;
   }
-  const val = (daySpend / percentageDayBudget) * 100;
-  console.log(daySpend);
-  console.log(percentageDayBudget);
-  console.log(val);
-  return val;
+  const value = (daySpend / percentageDayBudget) * 100;
+  return value;
 }
 
 export function countDayBudget(numberOfDaysForMonth: number, budget: number): number {
-  const b = parseInt((budget / numberOfDaysForMonth).toFixed(2));
-  return b;
+  const value = parseInt((budget / numberOfDaysForMonth).toFixed(2));
+  return value;
 }
 
 export function setColorForPercentage(percentage: number): string {

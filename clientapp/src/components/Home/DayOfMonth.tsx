@@ -2,7 +2,7 @@ import React from 'react';
 import { Expense } from '../../domains/models/Expense';
 import { Box, Flex } from '@chakra-ui/react';
 import { countDayBudget, countDayBudgetPercentage, setColorForPercentage } from '../../common/utils/budget/common-util-budget';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { budgetState } from '../../atoms/BudgetAtom';
 import { getNumberOfDaysForMonth } from '../../common/utils/date-and-time/commn-util-date-and-time';
 import { appState } from '../../atoms/AppAtom';
@@ -17,35 +17,34 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
   day,
   expenses,
 }) => {
-  const [budgetRecoil, setBudgetState] = useRecoilState(budgetState);
+  const budgetRecoil = useRecoilValue(budgetState);
   const [appRecoil, setAppState] = useRecoilState(appState);
 
   const sumDayBudget = (): number => {
-    const x = expenses.reduce((prev: number, curr: Expense) => {
+    const value = expenses.reduce((prev: number, curr: Expense) => {
       return prev + curr.amount;
     }, 0);
-    return x;
+    return value;
   }
 
   const setColor = (): string => {
     const numberOfDays = getNumberOfDaysForMonth(appRecoil.date);
-  
-    const b = countDayBudget(numberOfDays, budgetRecoil.amount!);
-    const c = sumDayBudget();
-    const x = countDayBudgetPercentage(b, c);
-    console.log(x);
-    return setColorForPercentage(x);
+    const dayBudget = countDayBudget(numberOfDays, budgetRecoil.amount!);
+    const daySum = sumDayBudget();
+    const dayPercentage = countDayBudgetPercentage(dayBudget, daySum);
+
+    return setColorForPercentage(dayPercentage);
   }
 
   const showDay = () => {
     let setDay = appRecoil.date.setDate(day);
-    let a = new Date(setDay);
+    let newDate = new Date(setDay);
 
     setAppState(prev => {
       return {
         ...prev,
         viewType: ViewType.Day,
-        date: a,
+        date: newDate,
       }
     })
   }

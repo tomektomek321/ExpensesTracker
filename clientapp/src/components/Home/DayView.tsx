@@ -3,7 +3,7 @@ import {
   Box,
   Text,
 } from '@chakra-ui/react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { NewExpense } from '../../domains/models/NewExpense';
 import { Expense } from '../../domains/models/Expense';
 import { ICategory } from '../../domains/models/ICategory';
@@ -19,22 +19,17 @@ import NewExpenseForm from '../newExpenseForm/NewExpenseForm';
 import { appState } from '../../atoms/AppAtom';
 
 export default function DayView() {
-
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
-  // const [date, setDate] = useState<Date>(new Date());
   const [totalDay, setTotalDay] = useState<number>(0);
 
-  const [budgetRecoil, setBudgetState] = useRecoilState(budgetState);
+  const setBudgetState = useSetRecoilState(budgetState);
   const [appRecoil, setAppState] = useRecoilState(appState);
 
   useEffect(() => {
-    // setDate(appRecoil.date);
-    getCategories();
-
-    
+    getCategories();    
   }, []);
 
   useEffect(() => {
@@ -43,7 +38,6 @@ export default function DayView() {
 
 
   const getExpensesAndBudget = () => {
-    // const nowDay = changeDay(dayShift);
     GetExpensesBy("sad", appRecoil.date).then((expenses_: [Expense[], Budget] | number) => {
       if(typeof expenses_ !== 'number' ) {
         setExpenses(prev => expenses_[0]);
@@ -75,7 +69,6 @@ export default function DayView() {
 
   const showDay = (shift: number) => {
     const day = changeDay(appRecoil.date, shift) 
-    // setDate(day);
     setAppState(prev => {
       return {
         ...prev,
@@ -142,7 +135,6 @@ export default function DayView() {
 
   return (
     <>
-
       <ExpensesHeader
         totalDay={totalDay}
         date={appRecoil.date}
