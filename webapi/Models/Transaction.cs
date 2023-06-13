@@ -16,7 +16,7 @@ namespace webapi.Models {
         }
         public Transaction(Data.Models.Transaction pTransaction) {
             this.Id = pTransaction.Id;
-            this.UserId = pTransaction.UserId;
+            this.UserId = new Guid(pTransaction.UserId);
             this.CategoryId = pTransaction.CategoryId;
             this.Amount = pTransaction.Amount;
             this.Date = pTransaction.Date;
