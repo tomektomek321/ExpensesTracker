@@ -11,7 +11,7 @@ namespace webapi.Models
         public Guid CategoryId { get; set; }
         public decimal Amount { get; set; }
         public string Period { get; set; } 
-        public User User { get; set; }
+        public UserRegistration User { get; set; }
         public Category Category { get; set; }
     }
 }
