@@ -4,30 +4,31 @@ import {
   Flex,
   Text,
 } from '@chakra-ui/react';
-import { BudgetState } from '../../atoms/BudgetAtom';
+import { budgetState } from '../../atoms/BudgetAtom';
 import { getNumberOfDaysForMonth } from '../../common/utils/date-and-time/commn-util-date-and-time';
+import { useRecoilState } from 'recoil';
+import { appState } from '../../atoms/AppAtom';
+import { ViewType } from '../../domains/enums/ViewType';
+import { countDayBudget } from '../../common/utils/budget/common-util-budget';
 
-type CalendarBudgetProps = {
-  budgetRecoil: BudgetState;
-  date: Date;
-};
-
-const CalendarBudgetHeader: React.FC<CalendarBudgetProps> = ({
-  budgetRecoil,
-  date,
-}) => {
+const CalendarBudgetHeader: React.FC = () => {
+  const [budgetRecoil, setBudgetState] = useRecoilState(budgetState);
+  const [appRecoil, setAppState] = useRecoilState(appState);
 
   const getDayBudget = (): number => {
-
     if(budgetRecoil.amount) {
-      const a = getNumberOfDaysForMonth(date.getFullYear(), date.getMonth());
-      const aFixed = a.toFixed(2);
-      const aFloat = parseFloat(aFixed);
-      const b = (budgetRecoil.amount/ aFloat);
+      const a = getNumberOfDaysForMonth(appRecoil.date);
+      const b = countDayBudget(a, budgetRecoil.amount);
       return parseFloat(b.toFixed(2));
     }
 
     return 0;
+  }
+
+  const changeView = (type: ViewType) => {
+    setAppState(prev => {
+      return { ...prev, viewType: type, }
+    });
   }
 
   return (
@@ -40,11 +41,14 @@ const CalendarBudgetHeader: React.FC<CalendarBudgetProps> = ({
     >
       <Box>
         <Flex>
-          <Text fontWeight={800} pr={3} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6}>
+          <Text fontWeight={800} pr={3} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6} onClick={() => changeView(ViewType.Weekly)}>
             Weekly view
           </Text>
-          <Text fontWeight={800} pl={3} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6}>
+          <Text fontWeight={800} pl={3} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6} onClick={() => changeView(ViewType.Monthly)}>
             Month view
+          </Text>
+          <Text fontWeight={800} pl={3} shadow="0px 0px 3px rgba(0,0,0,0.6)" p={6} onClick={() => changeView(ViewType.Day)}>
+            Day view
           </Text>
         </Flex>
       </Box>
