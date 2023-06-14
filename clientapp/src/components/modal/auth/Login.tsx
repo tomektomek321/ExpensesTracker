@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import InputItem from "../../layout/inputs/InputItem";
 import { appState } from "../../../atoms/AppAtom";
-import { testLogin } from "../../../domains/expenses/expenses-gateway";
+import { authData, persistUser, testLogin } from "../../../domains/expenses/expenses-gateway";
+import { authState } from "../../../atoms/AuthAtom";
 
 const Login: React.FC = () => {
 
@@ -14,15 +15,38 @@ const Login: React.FC = () => {
 
   const [formError, setFormError] = useState("");
 
-  const appRecoil = useSetRecoilState(appState);
+  const [appRecoil, setAppRecoil] = useRecoilState(appState);
+  const [authRecoil, setAuthRecoil] = useRecoilState(authState);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (formError) {setFormError(""); return;}
 
-    testLogin(form.email, form.password).then(ret => {
+    testLogin(form.email, form.password).then((user: authData | false) => {
+      console.log(user);
+      if(user) {
+        persistUser(user.email, user.token);
+        setAuthRecoil(prev => {
+          return {
+            ...prev,
+            email: user.email,
+            token: user.token,
+            logged: true,
+            displayName: user.email.split("@")[0],
+          }
+        });
 
-    })
+        setAppRecoil(prev => {
+          return {
+            ...prev,
+            viewModal: {
+              ...prev.viewModal,
+              open: false,
+            }
+          }
+        })
+      }
+    });
   };
 
   const onChange = ({
@@ -67,7 +91,7 @@ const Login: React.FC = () => {
           color="blue.500"
           cursor="pointer"
           onClick={() => {
-            appRecoil(prev => ({
+            setAppRecoil(prev => ({
               ...prev,
               viewModal: {
                 ...prev.viewModal,
@@ -86,7 +110,7 @@ const Login: React.FC = () => {
           fontWeight={700}
           cursor="pointer"
           onClick={() => {
-            appRecoil(prev => ({
+            setAppRecoil(prev => ({
               ...prev,
               viewModal: {
                 ...prev.viewModal,

@@ -52,8 +52,8 @@ const NotLoggedUserMenu: React.FC = () => {
         onClick={openLogIn}
       >
         <Flex alignItems="center">
-          <Icon fontSize={20} mr={2} as={MdOutlineLogin} />
-          <Text fontSize="16px" fontWeight={600}>
+          {/* <Icon fontSize={20} mr={2} as={MdOutlineLogin} /> */}
+          <Text fontSize="16px" ml={3} fontWeight={600}>
             Zaloguj
           </Text>
           
@@ -66,8 +66,8 @@ const NotLoggedUserMenu: React.FC = () => {
         onClick={openSignUp}
       >
         <Flex alignItems="center">
-          <Icon fontSize={20} mr={2} as={MdOutlineLogin} />
-          <Text fontSize="16px" fontWeight={600}>
+          {/* <Icon fontSize={20} mr={2} as={MdOutlineLogin} /> */}
+          <Text fontSize="16px" ml={3} fontWeight={600}>
             Zarejestruj
           </Text>
           
@@ -79,8 +79,8 @@ const NotLoggedUserMenu: React.FC = () => {
         _hover={{ bg: "blue.500", color: "white" }}
       >
         <Flex alignItems="center" onClick={testSeed}>
-          <Icon fontSize={20} mr={2} as={MdOutlineLogin} />
-          <Text fontSize="16px" fontWeight={600}>
+          {/* <Icon fontSize={20} mr={2} as={MdOutlineLogin} /> */}
+          <Text fontSize="16px" ml={3} fontWeight={600}>
             Seed db
           </Text>
           

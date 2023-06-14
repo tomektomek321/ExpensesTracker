@@ -218,7 +218,12 @@ export function GetBudget(): Promise<Budget> {
   });
 }
 
-export function testLogin(login: string, password: string): Promise<boolean> {
+export interface authData {
+  email: string;
+  token: string;
+}
+
+export function testLogin(login: string, password: string): Promise<authData | false> {
   return new Promise(async (res, rej) => {
     try {    
       let usersDbString = await localStorage.getItem(usersDbName);
@@ -227,7 +232,10 @@ export function testLogin(login: string, password: string): Promise<boolean> {
         
       }
 
-      res(true);
+      res({
+        email: 'tomek123@wp.pl',
+        token: 'asdasdasd',
+      });
 
     } catch(e) {
       console.log("GetBudget error");
@@ -236,5 +244,39 @@ export function testLogin(login: string, password: string): Promise<boolean> {
   });
 }
 
+export function persistUser(email: string, token: string): Promise<boolean> {
+  return new Promise(async (res, rej) => {
+    try {    
 
+      const user = JSON.stringify({email, token});
+      await localStorage.setItem(usersDbName, user);
+      res(true)
+
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
+
+export function getPersistedUser(): Promise<authData | false> {
+  return new Promise(async (res, rej) => {
+    try {    
+      debugger;
+      let usersDbString = await localStorage.getItem(usersDbName);
+      if(usersDbString) {
+        const user = JSON.parse(usersDbString);
+        res({
+          email: user.email,
+          token: user.token,
+        })
+      } else {
+        rej(false);
+      }
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
 
