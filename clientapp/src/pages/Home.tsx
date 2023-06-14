@@ -1,15 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Flex } from '@chakra-ui/react';
 import { ViewType } from '../domains/enums/ViewType';
 import DayView from '../components/Home/DayView';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { appState } from '../atoms/AppAtom';
 import MonthlyView from '../components/Home/MonthlyView';
 import WeeklyView from '../components/Home/WeeklyView';
 import CalendarBudgetHeader from '../components/Home/CalendarBudgetHeader';
+import { getPersistedUser } from '../domains/expenses/expenses-gateway';
+import { authState } from '../atoms/AuthAtom';
 
 export default function Home() {
   const appRecoil = useRecoilValue(appState);
+  const [authRecoil, setAuthRecoil] = useRecoilState(authState);
+
+  useEffect(() => {
+    getPersistedUser().then( user => {
+      if(user) {
+        setAuthRecoil(prev => {
+          return {
+            ...prev,
+            email: user.email,
+            token: user.token,
+            logged: true,
+            displayName: user.email.split("@")[0],
+          }
+        });
+      }
+    }).catch(e => {
+      console.log('persistedUser error')
+      console.log(e);
+    })
+    
+  }, [])
   
   return (
     <>

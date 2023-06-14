@@ -7,6 +7,7 @@ import { Budget } from "../models/Budget";
 import { Expense } from "../models/Expense";
 
 const expensesDbName = 'expenses';
+const usersDbName = 'users';
 const budgetDbName = 'budget';
 
 export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], Budget] | number> {
@@ -70,7 +71,6 @@ export function GetMonthExpensesBy(userId: string, date: Date): Promise<DayExpen
 
         dayExpenses.push(d);
       }
-      console.log(dayExpenses);
       res(dayExpenses);
 
     } catch(e) {
@@ -79,11 +79,6 @@ export function GetMonthExpensesBy(userId: string, date: Date): Promise<DayExpen
     }
   });
 }
-
-
-
-
-
 
 function convertDbExpensesToDomain(data: string): Expense[] {
   const response: Expense[] = [];
@@ -94,7 +89,6 @@ function convertDbExpensesToDomain(data: string): Expense[] {
   }
 
   return response;
-
 }
 
 export function SaveExpense(expense: Expense): Promise<number> {
@@ -138,7 +132,6 @@ export function UpdateExpense(expense: Expense): Promise<number> {
       expenses.splice(foundedExpense, 1, newExpense);
 
       await localStorage.setItem(expensesDbName, JSON.stringify(expenses));
-      console.log(1);
       res(1);
 
     } catch(e) {
@@ -160,7 +153,6 @@ export function RemoveExpense(expenseId: string): Promise<number> {
       expenses.splice(foundedExpense, 1);
 
       await localStorage.setItem(expensesDbName, JSON.stringify(expenses));
-      console.log(1);
       res(1);
 
     } catch(e) {
@@ -176,7 +168,6 @@ export function addTestExpenses(): Promise<number> {
       let data: Expense[] = mockExpenses;
     
       await localStorage.setItem(expensesDbName, JSON.stringify(data));
-      console.log(1);
       res(1);
 
     } catch(e) {
@@ -189,7 +180,7 @@ export function addTestExpenses(): Promise<number> {
 export function addTestBudget() {
   const budget = new Budget({
     id: makeRandomID(),
-    amount: 3500,
+    amount: 710,
     period: period.Monthly,
     userId: testUserId,
   });
@@ -218,7 +209,6 @@ export function GetBudget(): Promise<Budget> {
         period: budget.period,
         userId: budget.userId,
       })
-      console.log(1);
       res(a);
 
     } catch(e) {
@@ -227,3 +217,80 @@ export function GetBudget(): Promise<Budget> {
     }
   });
 }
+
+export interface authData {
+  email: string;
+  token: string;
+}
+
+export function testLogin(login: string, password: string): Promise<authData | false> {
+  return new Promise(async (res, rej) => {
+    try {    
+      let usersDbString = await localStorage.getItem(usersDbName);
+      if(!usersDbString) {
+
+        
+      }
+
+      res({
+        email: 'tomek123@wp.pl',
+        token: 'asdasdasd',
+      });
+
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
+
+export function persistUser(email: string, token: string): Promise<boolean> {
+  return new Promise(async (res, rej) => {
+    try {    
+
+      const user = JSON.stringify({email, token});
+      await localStorage.setItem(usersDbName, user);
+      res(true)
+
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
+
+export function testLogOut(): Promise<boolean> {
+  return new Promise(async (res, rej) => {
+    try {    
+      await localStorage.removeItem(usersDbName);
+      res(true)
+
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
+
+
+export function getPersistedUser(): Promise<authData | false> {
+  return new Promise(async (res, rej) => {
+    try {    
+      debugger;
+      let usersDbString = await localStorage.getItem(usersDbName);
+      if(usersDbString) {
+        const user = JSON.parse(usersDbString);
+        res({
+          email: user.email,
+          token: user.token,
+        })
+      } else {
+        rej(false);
+      }
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
+
