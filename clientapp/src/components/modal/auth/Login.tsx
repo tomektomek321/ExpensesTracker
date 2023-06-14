@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import InputItem from "../../layout/inputs/InputItem";
 import { appState } from "../../../atoms/AppAtom";
 import { authData, persistUser, testLogin } from "../../../domains/expenses/expenses-gateway";
@@ -15,8 +15,8 @@ const Login: React.FC = () => {
 
   const [formError, setFormError] = useState("");
 
-  const [appRecoil, setAppRecoil] = useRecoilState(appState);
-  const [authRecoil, setAuthRecoil] = useRecoilState(authState);
+  const setAppRecoil = useSetRecoilState(appState);
+  const setAuthRecoil = useSetRecoilState(authState);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

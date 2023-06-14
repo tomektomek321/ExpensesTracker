@@ -11,15 +11,15 @@ import {
 } from "@chakra-ui/react";
 import NotLoggedUserMenu from "./NotLoggedUserMenu";
 import { VscAccount } from "react-icons/vsc";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { authState } from "../../atoms/AuthAtom";
-import { IoSparkles } from "react-icons/io5";
+import LoggedUserMenu from "./LoggedUserMenu";
 
 type MenuWrapperProps = {};
 
 const MenuWrapper: React.FC<MenuWrapperProps> = () => {
 
-  const [authRecoil, setAuthRecoil] = useRecoilState(authState);
+  const authRecoil = useRecoilValue(authState);
 
   return (
     <Menu>
@@ -49,10 +49,6 @@ const MenuWrapper: React.FC<MenuWrapperProps> = () => {
                     <Text fontWeight={700} pl={2}>
                       {authRecoil?.displayName}
                     </Text>
-                    {/* <Flex alignItems="center">
-                      <Icon as={IoSparkles} color="brand.100" mr={1} />
-                      <Text color="gray.400">1 karma</Text>
-                    </Flex> */}
                   </Box>
                 </>
               ) : (
@@ -63,7 +59,14 @@ const MenuWrapper: React.FC<MenuWrapperProps> = () => {
         </Flex>
       </MenuButton>
       <MenuList>
-        <NotLoggedUserMenu />
+        {
+          authRecoil.logged ? (
+            <LoggedUserMenu />
+          ) : (
+            <NotLoggedUserMenu />
+          ) 
+        }
+        
       </MenuList>
     </Menu>
   );

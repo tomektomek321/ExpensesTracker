@@ -1,6 +1,5 @@
 import React from "react";
-import { MenuItem, Flex, Icon, Text } from "@chakra-ui/react";
-import { MdOutlineLogin } from "react-icons/md";
+import { MenuItem, Flex, Text } from "@chakra-ui/react";
 import { addTestBudget } from "../../domains/expenses/expenses-gateway";
 import AuthModal from "../modal/auth/AuthModal";
 import { useSetRecoilState } from "recoil";

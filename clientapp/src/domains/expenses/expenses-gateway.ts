@@ -259,6 +259,20 @@ export function persistUser(email: string, token: string): Promise<boolean> {
   });
 }
 
+export function testLogOut(): Promise<boolean> {
+  return new Promise(async (res, rej) => {
+    try {    
+      await localStorage.removeItem(usersDbName);
+      res(true)
+
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
+
+
 export function getPersistedUser(): Promise<authData | false> {
   return new Promise(async (res, rej) => {
     try {    
