@@ -3,6 +3,7 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
 import InputItem from "../../layout/inputs/InputItem";
 import { appState } from "../../../atoms/AppAtom";
+import { testLogin } from "../../../domains/expenses/expenses-gateway";
 
 const Login: React.FC = () => {
 
@@ -17,7 +18,11 @@ const Login: React.FC = () => {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (formError) setFormError("");
+    if (formError) {setFormError(""); return;}
+
+    testLogin(form.email, form.password).then(ret => {
+      
+    })
   };
 
   const onChange = ({

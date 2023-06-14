@@ -1,14 +1,11 @@
 import React from "react";
 import {
-  useDisclosure,
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
 } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
 import Login from "./Login";
