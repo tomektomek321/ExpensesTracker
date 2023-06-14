@@ -3,6 +3,7 @@ import { Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
 import { BsDot } from "react-icons/bs";
 import { useSetRecoilState } from "recoil";
 import { appState } from "../../../atoms/AppAtom";
+import { testLogin } from "../../../domains/expenses/expenses-gateway";
 
 
 const ResetPassword: React.FC = () => {
@@ -14,6 +15,8 @@ const ResetPassword: React.FC = () => {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    testLogin(email, "");
 
     setSuccess(true);
   };
