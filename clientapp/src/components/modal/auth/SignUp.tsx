@@ -5,7 +5,7 @@ import InputItem from "../../layout/inputs/InputItem";
 import { appState } from "../../../atoms/AppAtom";
 
 const SignUp: React.FC = () => {
-  
+
   const appRecoil = useSetRecoilState(appState);
 
   const [form, setForm] = useState({
@@ -87,9 +87,7 @@ const SignUp: React.FC = () => {
         >
           LOG IN
         </Text>
-        {false ||
-          "Some errors?"
-        }
+        {false || "" }
       </Flex>
     </form>
   );

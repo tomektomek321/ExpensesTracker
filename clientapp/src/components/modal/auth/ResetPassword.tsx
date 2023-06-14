@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
-import { BsDot, BsReddit } from "react-icons/bs";
+import { BsDot } from "react-icons/bs";
 import { useSetRecoilState } from "recoil";
-import { authState } from "../../../atoms/AuthAtom";
+import { appState } from "../../../atoms/AppAtom";
 
 
 const ResetPassword: React.FC = () => {
-  const setAuthModalState = useSetRecoilState(authState);
+
+  const appRecoil = useSetRecoilState(appState);
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<any>("");
 
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -19,7 +19,6 @@ const ResetPassword: React.FC = () => {
   };
   return (
     <Flex direction="column" alignItems="center" width="100%">
-      <Icon as={BsReddit} color="brand.100" fontSize={40} mb={2} />
       <Text fontWeight={700} mb={2}>
         Reset your password
       </Text>
@@ -55,7 +54,7 @@ const ResetPassword: React.FC = () => {
               bg="gray.50"
             />
             <Text textAlign="center" fontSize="10pt" color="red">
-              {error?.message}
+              
             </Text>
             <Button
               width="100%"
@@ -79,9 +78,12 @@ const ResetPassword: React.FC = () => {
       >
         <Text
           onClick={() =>
-            setAuthModalState((prev) => ({
+            appRecoil(prev => ({
               ...prev,
-              view: "login",
+              viewModal: {
+                ...prev.viewModal,
+                view: "login",
+              } 
             }))
           }
         >
@@ -90,9 +92,12 @@ const ResetPassword: React.FC = () => {
         <Icon as={BsDot} />
         <Text
           onClick={() =>
-            setAuthModalState((prev) => ({
+            appRecoil(prev => ({
               ...prev,
-              view: "signup",
+              viewModal: {
+                ...prev.viewModal,
+                view: "signup",
+              } 
             }))
           }
         >

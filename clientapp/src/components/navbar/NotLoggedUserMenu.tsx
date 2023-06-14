@@ -21,11 +21,26 @@ const NotLoggedUserMenu: React.FC = () => {
         ...prev,
         viewModal: {
           ...prev.viewModal,
+          view: "login",
           open: true,
         }
       }
     })
   }
+
+  const openSignUp = () => {
+    setModalState(prev => {
+      return {
+        ...prev,
+        viewModal: {
+          ...prev.viewModal,
+          view: "signup",
+          open: true,
+        }
+      }
+    })
+  }
+
 
   return (
     <>
@@ -34,8 +49,9 @@ const NotLoggedUserMenu: React.FC = () => {
         fontSize="10pt"
         fontWeight={700}
         _hover={{ bg: "blue.500", color: "white" }}
+        onClick={openLogIn}
       >
-        <Flex alignItems="center" onClick={openLogIn}>
+        <Flex alignItems="center">
           <Icon fontSize={20} mr={2} as={MdOutlineLogin} />
           <Text fontSize="16px" fontWeight={600}>
             Zaloguj
@@ -47,6 +63,7 @@ const NotLoggedUserMenu: React.FC = () => {
         fontSize="10pt"
         fontWeight={700}
         _hover={{ bg: "blue.500", color: "white" }}
+        onClick={openSignUp}
       >
         <Flex alignItems="center">
           <Icon fontSize={20} mr={2} as={MdOutlineLogin} />

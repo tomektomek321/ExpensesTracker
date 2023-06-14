@@ -11,6 +11,7 @@ import { useRecoilState } from "recoil";
 import Login from "./Login";
 import { appState } from "../../../atoms/AppAtom";
 import SignUp from "./SignUp";
+import ResetPassword from "./ResetPassword";
 
 type AuthModalProps = {};
 
@@ -30,15 +31,15 @@ const AuthModal: React.FC<AuthModalProps> = () => {
     <>
       <Modal isOpen={modalState.viewModal.open} onClose={handleClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent p={5}>
           <ModalHeader>
-            {/* {modalState.viewModal.view === "reset" && "Reset Password"} */}
+            {modalState.viewModal.view === "reset" && "Reset Password"}
             {modalState.viewModal.view === "login" && "Login"}
             {modalState.viewModal.view === "signup" && "Sign Up"}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {/* {modalState.viewModal.view === "reset" && <ResetPassword />} */}
+            {modalState.viewModal.view === "reset" && <ResetPassword />}
             {modalState.viewModal.view === "login" && <Login />}
             {modalState.viewModal.view === "signup" && <SignUp />}
           </ModalBody>

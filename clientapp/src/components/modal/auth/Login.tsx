@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     if (formError) {setFormError(""); return;}
 
     testLogin(form.email, form.password).then(ret => {
-      
+
     })
   };
 
@@ -58,7 +58,7 @@ const Login: React.FC = () => {
       >
         Log In
       </Button>
-      <Flex justifyContent="center" mb={2}>
+      <Flex mt={2} justifyContent="center" mb={2}>
         <Text fontSize="9pt" mr={1}>
           Forgot your password?
         </Text>
@@ -69,15 +69,18 @@ const Login: React.FC = () => {
           onClick={() => {
             appRecoil(prev => ({
               ...prev,
-              view: "reset",
+              viewModal: {
+                ...prev.viewModal,
+                view: "reset",
+              } 
             }))
           }}
         >
           Reset
         </Text>
       </Flex>
-      <Flex fontSize="9pt" justifyContent="center">
-        <Text mr={1}>New here?</Text>
+      <Flex my={2} fontSize="9pt" justifyContent="center">
+        <Text mr={2}>New here?</Text>
         <Text
           color="blue.500"
           fontWeight={700}
