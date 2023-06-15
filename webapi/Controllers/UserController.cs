@@ -28,7 +28,8 @@ namespace webapi.Controllers {
             _configuration = pConfiguration;
         }
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody] Models.UserRegistration pNewUser) {
+        public async Task<ActionResult> RegisterUser(Models.UserRegistration pNewUser) {
+            Console.WriteLine(1);
             var userExists = await _usersManager.FindByNameAsync(pNewUser.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status400BadRequest);

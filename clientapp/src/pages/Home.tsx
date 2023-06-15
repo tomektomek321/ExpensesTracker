@@ -10,6 +10,10 @@ import CalendarBudgetHeader from '../components/Home/CalendarBudgetHeader';
 import { getPersistedUser } from '../domains/expenses/expenses-gateway';
 import { authState } from '../atoms/AuthAtom';
 
+// Dwa endpointy - 
+// /api/user/register - bierze username, email i password
+// /api/user/login - username i password - zwraca JWT
+
 export default function Home() {
   const appRecoil = useRecoilValue(appState);
   const [authRecoil, setAuthRecoil] = useRecoilState(authState);

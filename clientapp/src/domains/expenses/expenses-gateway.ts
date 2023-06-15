@@ -275,8 +275,7 @@ export function testLogOut(): Promise<boolean> {
 
 export function getPersistedUser(): Promise<authData | false> {
   return new Promise(async (res, rej) => {
-    try {    
-      debugger;
+    try {
       let usersDbString = await localStorage.getItem(usersDbName);
       if(usersDbString) {
         const user = JSON.parse(usersDbString);
