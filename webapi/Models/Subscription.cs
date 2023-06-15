@@ -11,5 +11,17 @@ namespace webapi.Models
         public string Name { get; set; }
         public decimal Amount { get; set; }
         public DateTime RenewalDate { get; set; }
+        public Subscription()
+        {
+                
+        }
+        public Subscription(Data.Models.Subscription pSubscription)
+        {
+                this.Id = pSubscription.Id;
+            this.RenewalDate = pSubscription.RenewalDate;
+            this.Name = pSubscription.Name;
+            this.Amount = pSubscription.Amount;
+            this.UserId = new Guid(pSubscription.UserId);
+        }
     }
 }
