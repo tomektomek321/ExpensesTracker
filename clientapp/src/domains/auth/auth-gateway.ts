@@ -44,9 +44,10 @@ export class AuthGateway {
       })
       .then(d => d.json())
       .then((response: AuthLoginResponse) => {
-        return this.persistLoginUser(data.Username, response.token)
+        this.persistLoginUser(data.Username, response.token);
+        return response;
       })
-      .then((response: boolean) => {
+      .then((response: any) => {
         res(response as unknown as AuthLoginResponse)
       })
       .catch(e => { 

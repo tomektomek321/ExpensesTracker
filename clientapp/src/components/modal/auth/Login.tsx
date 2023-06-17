@@ -31,7 +31,7 @@ const Login: React.FC = () => {
 
     AuthGateway.login({Username: form.username, Password: form.password})
     .then((response: AuthLoginResponse) => {
-      RecoilSignIn(setAppRecoil,  form.username,response.token);
+      RecoilSignIn(setAuthRecoil, form.username, response.token);
       RecoilToggleModal(setAppRecoil, false);
     }).catch(e => {
       console.log(e);

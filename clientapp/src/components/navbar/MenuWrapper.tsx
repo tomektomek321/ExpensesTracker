@@ -47,7 +47,7 @@ const MenuWrapper: React.FC<MenuWrapperProps> = () => {
                     mr={8}
                   >
                     <Text fontWeight={700} pl={2}>
-                      {authRecoil?.displayName}
+                      {authRecoil?.username}
                     </Text>
                   </Box>
                 </>
