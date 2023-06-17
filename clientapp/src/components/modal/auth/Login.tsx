@@ -3,13 +3,20 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
 import InputItem from "../../layout/inputs/InputItem";
 import { appState } from "../../../atoms/AppAtom";
-import { authData, persistUser, testLogin } from "../../../domains/expenses/expenses-gateway";
 import { authState } from "../../../atoms/AuthAtom";
+import { AuthGateway, AuthLoginResponse } from "../../../domains/auth/auth-gateway";
+import { RecoilToggleModal } from "../../../atoms/app-atom-utils";
+import { RecoilSignIn } from "../../../atoms/auth-atom-utils";
+
+export interface AuthLoginPayload {
+  Username: string;
+  Password: string;
+}
 
 const Login: React.FC = () => {
 
   const [form, setForm] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -20,32 +27,15 @@ const Login: React.FC = () => {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (formError) {setFormError(""); return;}
+    setFormError("");
 
-    testLogin(form.email, form.password).then((user: authData | false) => {
-      console.log(user);
-      if(user) {
-        persistUser(user.email, user.token);
-        setAuthRecoil(prev => {
-          return {
-            ...prev,
-            email: user.email,
-            token: user.token,
-            logged: true,
-            displayName: user.email.split("@")[0],
-          }
-        });
-
-        setAppRecoil(prev => {
-          return {
-            ...prev,
-            viewModal: {
-              ...prev.viewModal,
-              open: false,
-            }
-          }
-        })
-      }
+    AuthGateway.login({Username: form.username, Password: form.password})
+    .then((response: AuthLoginResponse) => {
+      RecoilSignIn(setAppRecoil,  form.username,response.token);
+      RecoilToggleModal(setAppRecoil, false);
+    }).catch(e => {
+      console.log(e);
+      setFormError("login error TODO");
     });
   };
 
@@ -61,8 +51,8 @@ const Login: React.FC = () => {
   return (
     <form onSubmit={onSubmit}>
       <InputItem
-        name="email"
-        placeholder="email"
+        name="username"
+        placeholder="username"
         type="text"
         mb={2}
         onChange={onChange}

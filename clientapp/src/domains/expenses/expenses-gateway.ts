@@ -7,7 +7,7 @@ import { Budget } from "../models/Budget";
 import { Expense } from "../models/Expense";
 
 const expensesDbName = 'expenses';
-const usersDbName = 'users';
+const usersDbName = 'expenseUser';
 const budgetDbName = 'budget';
 
 export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], Budget] | number> {
@@ -218,7 +218,7 @@ export function GetBudget(): Promise<Budget> {
   });
 }
 
-export interface authData {
+interface authData {
   email: string;
   token: string;
 }
@@ -253,7 +253,7 @@ export function persistUser(email: string, token: string): Promise<boolean> {
       res(true)
 
     } catch(e) {
-      console.log("GetBudget error");
+      console.log("persistUser error");
       rej(false);
     }
   });
@@ -287,7 +287,7 @@ export function getPersistedUser(): Promise<authData | false> {
         rej(false);
       }
     } catch(e) {
-      console.log("GetBudget error");
+      console.log("getPersistedUser error");
       rej(false);
     }
   });

@@ -23,10 +23,12 @@ const SignUp: React.FC = () => {
   });
 
   const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (formError) setFormError("");
+    setFormError("");
+    setFormSuccess("");
 
     if(form.username.length < 4 || form.email.length < 7) {
       return setFormError("username must be at least 4 characters");
@@ -44,10 +46,11 @@ const SignUp: React.FC = () => {
       'Email': form.email,
       'Password': form.password}).then( response => {
       console.log(response);
-    })
-
-
-
+    }).then( data => {
+      setFormSuccess("Register successfuly. Plaese login");
+    }).catch( e => {
+      setFormError("Register failed. Plaese fix something xd");
+    });
   };
 
   const onChange = ({
@@ -121,6 +124,8 @@ const SignUp: React.FC = () => {
           LOG IN
         </Text>
         {formError || "" }
+        {formSuccess || "" }
+
       </Flex>
     </form>
   );

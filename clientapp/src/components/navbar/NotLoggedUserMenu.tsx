@@ -8,10 +8,8 @@ import { appState } from "../../atoms/AppAtom";
 const NotLoggedUserMenu: React.FC = () => {
   const  setModalState = useSetRecoilState(appState);
 
-
   const testSeed = () => {
     addTestBudget();
-    // addTestExpenses();
   }
 
   const openLogIn = () => {
