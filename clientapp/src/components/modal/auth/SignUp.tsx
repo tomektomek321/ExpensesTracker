@@ -3,29 +3,54 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
 import InputItem from "../../layout/inputs/InputItem";
 import { appState } from "../../../atoms/AppAtom";
+import { AuthGateway } from "../../../domains/auth/auth-gateway";
+
+export interface AuthRegister {
+  Username: string;
+  Email: string;
+  Password: string;
+}
 
 const SignUp: React.FC = () => {
 
   const appRecoil = useSetRecoilState(appState);
 
   const [form, setForm] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
+    username: "tomek1",
+    email: "tomek@wp.pl",
+    password: "tomek1",
+    confirmPassword: "tomek1",
   });
 
   const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (formError) setFormError("");
-    if (!form.email.includes("@")) {
-      return setFormError("Please enter a valid email");
+    setFormError("");
+    setFormSuccess("");
+
+    if(form.username.length < 4 || form.email.length < 7) {
+      return setFormError("username must be at least 4 characters");
+    } 
+
+    if(form.email.length < 7) {
+      return setFormError("email must be at least 7 characters");
     }
 
     if (form.password !== form.confirmPassword) {
       return setFormError("Passwords do not match");
     }
+
+    AuthGateway.register({'Username': form.username,
+      'Email': form.email,
+      'Password': form.password}).then( response => {
+      console.log(response);
+    }).then( data => {
+      setFormSuccess("Register successfuly. Plaese login");
+    }).catch( e => {
+      setFormError("Register failed. Plaese fix something xd");
+    });
   };
 
   const onChange = ({
@@ -40,9 +65,18 @@ const SignUp: React.FC = () => {
   return (
     <form onSubmit={onSubmit}>
       <InputItem
+        name="username"
+        placeholder="username"
+        type="text"
+        value={form.username}
+        mb={2}
+        onChange={onChange}
+      />
+      <InputItem
         name="email"
         placeholder="email"
         type="text"
+        value={form.email}
         mb={2}
         onChange={onChange}
       />
@@ -50,6 +84,7 @@ const SignUp: React.FC = () => {
         name="password"
         placeholder="password"
         type="password"
+        value={form.password}
         mb={2}
         onChange={onChange}
       />
@@ -57,6 +92,7 @@ const SignUp: React.FC = () => {
         name="confirmPassword"
         placeholder="confirm password"
         type="password"
+        value={form.confirmPassword}
         onChange={onChange}
       />
       <Button
@@ -87,7 +123,9 @@ const SignUp: React.FC = () => {
         >
           LOG IN
         </Text>
-        {false || "" }
+        {formError || "" }
+        {formSuccess || "" }
+
       </Flex>
     </form>
   );

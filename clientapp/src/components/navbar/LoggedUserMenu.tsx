@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 import { AddIcon } from "@chakra-ui/icons";
 import { useSetRecoilState } from "recoil";
 import { authState } from "../../atoms/AuthAtom";
-import { testLogOut } from "../../domains/expenses/expenses-gateway";
+import { RecoilSignOut } from "../../atoms/auth-atom-utils";
+import { AuthGateway } from "../../domains/auth/auth-gateway";
 
 type LoggedUserMenuProps = {};
 
@@ -15,16 +16,8 @@ const LoggedUserMenu: React.FC<LoggedUserMenuProps> = () => {
   const setAuthRecoil = useSetRecoilState(authState);
 
   const logout = async () => {
-    setAuthRecoil(prev => {
-      return {
-        ...prev,
-        email: null,
-        token: null,
-        logged: false,
-        displayName: null,
-      }
-    });
-    testLogOut();
+    RecoilSignOut(setAuthRecoil);
+    AuthGateway.logOut();
   }
 
   return (

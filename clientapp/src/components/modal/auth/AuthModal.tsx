@@ -12,36 +12,32 @@ import Login from "./Login";
 import { appState } from "../../../atoms/AppAtom";
 import SignUp from "./SignUp";
 import ResetPassword from "./ResetPassword";
+import { RecoilToggleModal } from "../../../atoms/app-atom-utils";
 
 type AuthModalProps = {};
 
 const AuthModal: React.FC<AuthModalProps> = () => {
-  const [modalState, setModalState] = useRecoilState(appState);
+  const [appRecoil, setAppRecoil] = useRecoilState(appState);
 
-  const handleClose = () =>
-    setModalState((prev) => ({
-      ...prev,
-      viewModal: {
-        ...prev.viewModal,
-        open: false,
-      },
-    }));
+  const handleClose = () => {
+    RecoilToggleModal(setAppRecoil, false);
+  }
   
   return (
     <>
-      <Modal isOpen={modalState.viewModal.open} onClose={handleClose}>
+      <Modal isOpen={appRecoil.viewModal.open} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent p={5}>
           <ModalHeader>
-            {modalState.viewModal.view === "reset" && "Reset Password"}
-            {modalState.viewModal.view === "login" && "Login"}
-            {modalState.viewModal.view === "signup" && "Sign Up"}
+            {appRecoil.viewModal.view === "reset" && "Reset Password"}
+            {appRecoil.viewModal.view === "login" && "Login"}
+            {appRecoil.viewModal.view === "signup" && "Sign Up"}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {modalState.viewModal.view === "reset" && <ResetPassword />}
-            {modalState.viewModal.view === "login" && <Login />}
-            {modalState.viewModal.view === "signup" && <SignUp />}
+            {appRecoil.viewModal.view === "reset" && <ResetPassword />}
+            {appRecoil.viewModal.view === "login" && <Login />}
+            {appRecoil.viewModal.view === "signup" && <SignUp />}
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -4,40 +4,21 @@ import { addTestBudget } from "../../domains/expenses/expenses-gateway";
 import AuthModal from "../modal/auth/AuthModal";
 import { useSetRecoilState } from "recoil";
 import { appState } from "../../atoms/AppAtom";
+import { RecoilOpenModal } from "../../atoms/app-atom-utils";
 
 const NotLoggedUserMenu: React.FC = () => {
-  const  setModalState = useSetRecoilState(appState);
-
+  const  setAppRecoil = useSetRecoilState(appState);
 
   const testSeed = () => {
     addTestBudget();
-    // addTestExpenses();
   }
 
   const openLogIn = () => {
-    setModalState(prev => {
-      return {
-        ...prev,
-        viewModal: {
-          ...prev.viewModal,
-          view: "login",
-          open: true,
-        }
-      }
-    })
+    RecoilOpenModal(setAppRecoil, 'login');
   }
 
   const openSignUp = () => {
-    setModalState(prev => {
-      return {
-        ...prev,
-        viewModal: {
-          ...prev.viewModal,
-          view: "signup",
-          open: true,
-        }
-      }
-    })
+    RecoilOpenModal(setAppRecoil, 'signup');
   }
 
 

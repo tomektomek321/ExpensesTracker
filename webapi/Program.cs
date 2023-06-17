@@ -14,7 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("ExpensesTrackerDbConnection");
+
+builder.Services.AddCors();
+
 builder.Services.AddControllers();
+
 builder.Services.AddDbContext<ExpensesDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<webapi.Data.Models.User, webapi.Data.Models.Role>()
@@ -48,6 +52,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    //.AllowCredentials()
+);
 
 app.UseHttpsRedirection();
 
