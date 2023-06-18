@@ -38,3 +38,11 @@ export function setDay(date: Date, day: number): Date {
 export function getNumberOfDaysForMonth(date: Date): number {
   return new Date(date.getFullYear(), date.getMonth(), 0).getDate();
 }
+
+export function convertToUrlDateTime(date: Date): string {
+  const dd = date.getDate();
+  const yy = date.getFullYear();
+  const mm = date.getMonth() + 1;
+
+  return `${yy}-${mm}-${dd}`;
+}

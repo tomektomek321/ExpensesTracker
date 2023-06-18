@@ -17,6 +17,7 @@ export class AuthGateway {
   private static readonly userStorage = 'expenseUser';
 
   public static register(data: AuthRegister) {
+
     return new Promise((res, rej) => {
       fetch(this.apiUrl + "user/register", {
         method: "POST",
@@ -30,7 +31,7 @@ export class AuthGateway {
         console.log(e);
         rej(e);
       });
-    })
+    });
   }
 
   public static login(data: AuthLoginPayload): Promise<AuthLoginResponse> {

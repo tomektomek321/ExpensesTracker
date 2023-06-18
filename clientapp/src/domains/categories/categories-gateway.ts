@@ -1,14 +1,24 @@
+import { environment } from "../../environment/environment";
 import { ICategory } from "../models/ICategory";
 
-export default function GetCategoriesByUserId(id: string): Promise<ICategory[]> {
-  return new Promise((res, rej) => {
-    setTimeout(() => {
-      res([
-        {id: "123asd123123s", name: "Spożywka", userId: "addd1", },
-        {id: "1234sddsfsdf33", name: "Rozrywka", userId: "addd1", },
-        {id: "123a1ddsfsj", name: "Sport", userId: "addd1", },
-        {id: "123a1dg", name: "Restauracje", userId: "addd1", },
-      ]);
-    }, 500);
-  })
+export class CategoryGateway {
+  private static readonly apiUrl = environment.apiUrl;
+  
+  public static async getCategories(): Promise<ICategory[]> {
+    return new Promise((res, rej) => {
+      fetch(this.apiUrl + `categories`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(d => d.json())
+      .then((resp: ICategory[]) => {
+        res(resp);
+      }).catch(e => { 
+        console.log(e);
+        rej(e);
+      });
+    });
+  }
 }

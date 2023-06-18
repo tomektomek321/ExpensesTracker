@@ -1,8 +1,12 @@
-import { Box, Button, Flex, Input, Spinner, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import GetCategoriesByUserId from '../domains/categories/categories-gateway';
+import { Box, Button, Flex, Input, Spinner, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
 import { ICategory } from '../domains/models/ICategory';
 import { MdBuild } from 'react-icons/md';
+import { AuthGateway } from '../domains/auth/auth-gateway';
+import { RecoilSignIn } from '../atoms/auth-atom-utils';
+import { useRecoilState } from 'recoil';
+import { authState } from '../atoms/AuthAtom';
+import { CategoryGateway } from '../domains/categories/categories-gateway';
 
 export default function MyCategories() {
 
@@ -12,15 +16,29 @@ export default function MyCategories() {
   const [nowEditValue, setNowEditValue] =  useState<string>("");
   const [newCategoryValue, setNewCategoryValue] =  useState<string>("");
 
+  const [authRecoil, setAuthRecoil] = useRecoilState(authState);
+
   useEffect(() => {
     getCategoriesByUserId();
+    AuthGateway.getPersistedUser().then( user => {
+      if(user) {
+        RecoilSignIn(setAuthRecoil, user.username, user.token)
+      }
+    }).catch(e => {
+      console.log('getPersistedUser error')
+      console.log(e);
+    });
   }, []);
 
   const getCategoriesByUserId = () => {
-    GetCategoriesByUserId("sad").then((val: ICategory[]) => {
-      setCategories(val);
+    // GetCategoriesByUserId("sad").then((val: ICategory[]) => {
+    //   setCategories(val);
+    //   setLoading(false);
+    // })
+    CategoryGateway.getCategories().then( r => {
+      setCategories(r);
       setLoading(false);
-    })
+    });
   }
 
   const handleEditCategory = (id: string, name: string) => {
@@ -48,7 +66,7 @@ export default function MyCategories() {
 
   const handleCreate = () => {
     const newCategories = [...categories];
-    newCategories.push({id: "123213", name: newCategoryValue, userId: "123213"});
+    newCategories.push({id: "123213", name: newCategoryValue});
     setCategories(newCategories);
 
     setNewCategoryValue("");
@@ -60,7 +78,6 @@ export default function MyCategories() {
         <Spinner size='xl' />
       </Flex>
     )
-    
   }
 
   return (
