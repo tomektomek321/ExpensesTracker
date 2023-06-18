@@ -16,7 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("ExpensesTrackerDbConnection");
 builder.Services.AddCors();
-builder.Services.AddControllers().AddJsonOptions(options=> options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddControllers()
+    .AddJsonOptions(options=> options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+    );
 builder.Services.AddDbContext<ExpensesDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<webapi.Data.Models.User, webapi.Data.Models.Role>()
