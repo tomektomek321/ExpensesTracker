@@ -23,6 +23,8 @@ namespace webapi.Data.Models
 
         [Required]
         public DateTime RenewalDate { get; set; }
+        [Required]
+        public int RenewalFrequency { get; set; }
 
         // Navigation properties
         [ForeignKey("UserId")]

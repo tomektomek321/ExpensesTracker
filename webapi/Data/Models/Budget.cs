@@ -21,7 +21,7 @@ namespace webapi.Data.Models
         public decimal Amount { get; set; }
 
         [Required]
-        public string Period { get; set; } // Weekly or Monthly
+        public Enums.BudgetPeriod Period { get; set; } // Weekly or Monthly or Yearly
 
         // Navigation properties
         [ForeignKey("UserId")]
