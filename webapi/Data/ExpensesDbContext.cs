@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using webapi.Data.Models;
 
-namespace webapi.Data
-{
+namespace webapi.Data {
     public class ExpensesDbContext : IdentityDbContext<User, Role, string> {
         public ExpensesDbContext(DbContextOptions<ExpensesDbContext> options)
             : base(options) {
@@ -73,9 +72,9 @@ namespace webapi.Data
                 .HasOne(r => r.Transaction)
                 .WithMany(t => t.Receipts)
                 .HasForeignKey(r => r.TransactionId)
-                .HasConstraintName("FK_Receipts_Transactions"); 
-            
-            
+                .HasConstraintName("FK_Receipts_Transactions");
+
+
 
             modelBuilder.Entity<Subscription>()
                 .Property(p => p.Amount)
@@ -88,6 +87,9 @@ namespace webapi.Data
                 .WithMany(u => u.Subscriptions)
                 .HasForeignKey(s => s.UserId)
                 .HasConstraintName("FK_Subscriptions_Users");
+            modelBuilder.Entity<Subscription>()
+                .Property(s => s.RenewalFrequency)
+                .HasDefaultValue(Consts.RenewalFrequency.MONTHLY);
 
         }
     }
