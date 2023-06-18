@@ -2,7 +2,7 @@ import { Flex } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil';
 import { appState } from '../../atoms/AppAtom';
-import { DayExpenses, GetMonthExpensesBy } from '../../domains/expenses/expenses-gateway';
+import { DayExpenses, GetMonthExpensesBy } from '../../domains/expenses/expenses2-gateway';
 import { testUserId } from '../../common/data/mocks';
 import DayOfMonth from './DayOfMonth';
 
