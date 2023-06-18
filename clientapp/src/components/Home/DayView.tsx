@@ -44,7 +44,6 @@ export default function DayView() {
   }, [appRecoil.date, authRecoil.logged]);
 
   const getExpensesAndBudget = () => {
-
     if(!authRecoil.logged) return;
 
     ExpensesGateway.getExpenses(appRecoil.date).then( (expenses: Expense[]) => {

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  Input,
-  Select,
-  Td,
-  Tr
-} from '@chakra-ui/react';
+import { Button, Input, Select, Td, Tr } from '@chakra-ui/react';
 import { Expense } from '../../domains/models/Expense';
 import { ICategory } from '../../domains/models/ICategory';
 import { NewExpense } from '../../domains/models/NewExpense';
@@ -17,7 +11,6 @@ type ExpenseRowProps = {
   idx: number;
   expense: Expense;
   nowEdit: string | null;
-  // categories: ICategory[];
   handleEditInputValue: (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
   nowEditValue: NewExpense,
   handleCancel: () => void,
@@ -30,7 +23,6 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   idx,
   expense,
   nowEdit,
-  // categories,
   handleEditInputValue,
   nowEditValue,
   handleCancel,
@@ -42,8 +34,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   const [categoriesRecoil, setCategoriesRecoil] = useRecoilState(categoriesState);
 
   const getCategoryById = (id: string): ICategory => {
-    const category = categoriesRecoil.categories.find(c => c.id === id)!;
-    return category;
+    return categoriesRecoil.categories.find(c => c.id === id)!;
   }
 
   return (
@@ -54,9 +45,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           nowEdit == null || nowEdit !== expense.id ? (
             expense.note
           ) : (
-            <>
-              <Input border={'1px solid gray'} focusBorderColor='pink.400' name="note" htmlSize={6} width='auto' color='teal' value={nowEditValue.note} onChange={(e) => { handleEditInputValue(e);  }} />
-            </>
+            <Input border={'1px solid gray'} focusBorderColor='pink.400' name="note" htmlSize={6} width='auto' color='teal' value={nowEditValue.note} onChange={(e) => { handleEditInputValue(e);  }} />
           )
         }
       </Td>
@@ -65,9 +54,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           nowEdit == null || nowEdit !== expense.id ? (
             expense.amount
           ) : (
-            <>
-              <Input border={'1px solid gray'} focusBorderColor='pink.400' name='amount' htmlSize={1} width='auto' color='teal' value={nowEditValue.amount} onChange={(e) => { handleEditInputValue(e); }} />
-            </>
+            <Input border={'1px solid gray'} focusBorderColor='pink.400' name='amount' htmlSize={1} width='auto' color='teal' value={nowEditValue.amount} onChange={(e) => { handleEditInputValue(e); }} />
           )
         }
       </Td>
@@ -105,9 +92,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
       <Td>
         {
           nowEdit == null || nowEdit !== expense.id ? (
-            <>
-              <Button leftIcon={<MdBuild />} colorScheme='pink' variant='outline' onClick={() => handleEditCategory(expense.id!) } >Edit</Button>
-            </>
+            <Button leftIcon={<MdBuild />} colorScheme='pink' variant='outline' onClick={() => handleEditCategory(expense.id!) } >Edit</Button>
           ) : (
             <>
               <Button leftIcon={<MdBuild />} colorScheme='pink' variant='outline' onClick={handleUpdateExpense}>Update</Button>

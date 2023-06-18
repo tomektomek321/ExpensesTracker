@@ -57,7 +57,6 @@ const ExpensesTable: React.FC<ExpenseRowProps> = ({
                     idx={idx}
                     expense={expense}
                     nowEdit={nowEdit}
-                    // categories={categories}
                     handleEditInputValue={handleEditInputValue}
                     nowEditValue={nowEditValue}
                     handleCancel={handleCancel}
