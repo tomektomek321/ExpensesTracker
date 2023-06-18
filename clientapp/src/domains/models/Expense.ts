@@ -1,8 +1,8 @@
 import { IExpense } from "./IExpense";
 
 export class Expense {
-  public readonly id: string;
-  public readonly category: string;
+  public readonly id: string | null;
+  public readonly categoryId: string;
   public readonly note: string;
   public readonly amount: number;
   public readonly date: Date;
@@ -10,7 +10,7 @@ export class Expense {
 
   constructor(data: IExpense) {
     this.id = data.id;
-    this.category = data.category;
+    this.categoryId = data.categoryId;
     this.note = data.note;
     this.amount = data.amount;
     this.date = new Date(data.date);

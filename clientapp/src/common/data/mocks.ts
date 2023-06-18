@@ -4,7 +4,7 @@ import { isTheSameDate } from "../utils/date-and-time/commn-util-date-and-time";
 import { mockExpenses } from "./mocks/mockExpenses";
 
 export const emptyNewExpense: NewExpense = {
-  category: "",
+  categoryId: "",
   note: "",
   amount: 0,
 }
