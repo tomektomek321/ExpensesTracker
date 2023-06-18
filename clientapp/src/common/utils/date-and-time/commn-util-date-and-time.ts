@@ -10,14 +10,31 @@ export function isTheSameDate(date1: Date, date2: Date): boolean {
   return false;
 }
 
-export function changeDay(dayShift: number): Date {
+export function isTheSameMonth(date1: Date, date2: Date): boolean {
+  if (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth()
+  ) {
+    return true;
+  }
 
-  const previousDate = new Date(new Date().getTime());
+  return false;
+}
+
+export function changeDay(date: Date, dayShift: number): Date {
+  const previousDate = new Date(date.getTime());
   previousDate.setDate(previousDate.getDate() + dayShift);
   
   return previousDate;
 }
 
-export function getNumberOfDaysForMonth(year: number, month: number): number {
-  return new Date(year, month, 0).getDate();
+export function setDay(date: Date, day: number): Date {
+  const previousDate = new Date(date.getTime());
+  previousDate.setDate(day);
+  
+  return previousDate;
+}
+
+export function getNumberOfDaysForMonth(date: Date): number {
+  return new Date(date.getFullYear(), date.getMonth(), 0).getDate();
 }

@@ -13,9 +13,11 @@ import {
 import { Expense } from '../../domains/models/Expense';
 import { ICategory } from '../../domains/models/ICategory';
 import { NewExpense } from '../../domains/models/NewExpense';
-import { emptyNewExpense } from '../../common/data/mocks';
+import { emptyNewExpense, testUserId } from '../../common/data/mocks';
 import { SaveExpense } from '../../domains/expenses/expenses-gateway';
 import { makeRandomID } from '../../common/utils/randomID';
+import { useRecoilValue } from 'recoil';
+import { appState } from '../../atoms/AppAtom';
 
 type NewExpenseFormProps = {
   expenses: Expense[];
@@ -30,7 +32,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   categories,
   countTotalDay
 }) => {
-
+  const appRecoil = useRecoilValue(appState);
   const [newExpenseValue, setNewExpenseValue] =  useState<NewExpense>(emptyNewExpense);
 
   const handleSetNewExpenseValue = (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -51,8 +53,8 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
       note: newExpenseValue.note,
       category: newExpenseValue.category,
       amount: parseFloat(newExpenseValue.amount.toString()),
-      date: new Date().toString(),
-      userId: "addd1"
+      date: appRecoil.date.toString(),
+      userId: testUserId,
     });
 
     newExpenses.push(ob);

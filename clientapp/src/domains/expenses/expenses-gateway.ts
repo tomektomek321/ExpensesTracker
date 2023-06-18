@@ -1,12 +1,13 @@
 import { testUserId } from "../../common/data/mocks";
 import { mockExpenses } from "../../common/data/mocks/mockExpenses";
-import { isTheSameDate } from "../../common/utils/date-and-time/commn-util-date-and-time";
+import { getNumberOfDaysForMonth, isTheSameDate, isTheSameMonth } from "../../common/utils/date-and-time/commn-util-date-and-time";
 import { makeRandomID } from "../../common/utils/randomID";
 import { period } from "../enums/Period";
 import { Budget } from "../models/Budget";
 import { Expense } from "../models/Expense";
 
 const expensesDbName = 'expenses';
+const usersDbName = 'expenseUser';
 const budgetDbName = 'budget';
 
 export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], Budget] | number> {
@@ -31,6 +32,54 @@ export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], B
   });
 }
 
+export interface DayExpenses {
+  day: number;
+  expenses: Expense[];
+}
+
+export function GetMonthExpensesBy(userId: string, date: Date): Promise<DayExpenses[] | number> {
+  return new Promise(async (res, rej) => {
+    try {
+      let dbData = localStorage.getItem(expensesDbName)!;
+
+      const data = convertDbExpensesToDomain(dbData);
+
+      let expenses = data.filter(e => {
+        const sameDate = isTheSameMonth(e.date, date);
+        return sameDate;
+      });
+
+      const numberOfDays = getNumberOfDaysForMonth(date);
+
+      const dayExpenses: DayExpenses[] = [];
+
+      for(let i = 1; i < numberOfDays; i++) {
+
+        const date1 = new Date();
+          date1.setDate(i);
+          date1.setMonth(date.getMonth());
+        
+        const day = expenses.filter(e => {
+          const sameDate = isTheSameDate(date1, e.date);
+          return sameDate;
+        });
+
+        const d: DayExpenses = {
+          day: i,
+          expenses: day,
+        }
+
+        dayExpenses.push(d);
+      }
+      res(dayExpenses);
+
+    } catch(e) {
+      console.log("GetExpensesBy error");
+      rej(-1);
+    }
+  });
+}
+
 function convertDbExpensesToDomain(data: string): Expense[] {
   const response: Expense[] = [];
   const expenses: any = JSON.parse(data);
@@ -40,7 +89,6 @@ function convertDbExpensesToDomain(data: string): Expense[] {
   }
 
   return response;
-
 }
 
 export function SaveExpense(expense: Expense): Promise<number> {
@@ -84,7 +132,6 @@ export function UpdateExpense(expense: Expense): Promise<number> {
       expenses.splice(foundedExpense, 1, newExpense);
 
       await localStorage.setItem(expensesDbName, JSON.stringify(expenses));
-      console.log(1);
       res(1);
 
     } catch(e) {
@@ -106,7 +153,6 @@ export function RemoveExpense(expenseId: string): Promise<number> {
       expenses.splice(foundedExpense, 1);
 
       await localStorage.setItem(expensesDbName, JSON.stringify(expenses));
-      console.log(1);
       res(1);
 
     } catch(e) {
@@ -122,7 +168,6 @@ export function addTestExpenses(): Promise<number> {
       let data: Expense[] = mockExpenses;
     
       await localStorage.setItem(expensesDbName, JSON.stringify(data));
-      console.log(1);
       res(1);
 
     } catch(e) {
@@ -135,7 +180,7 @@ export function addTestExpenses(): Promise<number> {
 export function addTestBudget() {
   const budget = new Budget({
     id: makeRandomID(),
-    amount: 3500,
+    amount: 710,
     period: period.Monthly,
     userId: testUserId,
   });
@@ -164,7 +209,6 @@ export function GetBudget(): Promise<Budget> {
         period: budget.period,
         userId: budget.userId,
       })
-      console.log(1);
       res(a);
 
     } catch(e) {
@@ -173,3 +217,79 @@ export function GetBudget(): Promise<Budget> {
     }
   });
 }
+
+interface authData {
+  email: string;
+  token: string;
+}
+
+export function testLogin(login: string, password: string): Promise<authData | false> {
+  return new Promise(async (res, rej) => {
+    try {    
+      let usersDbString = await localStorage.getItem(usersDbName);
+      if(!usersDbString) {
+
+        
+      }
+
+      res({
+        email: 'tomek123@wp.pl',
+        token: 'asdasdasd',
+      });
+
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
+
+export function persistUser(email: string, token: string): Promise<boolean> {
+  return new Promise(async (res, rej) => {
+    try {    
+
+      const user = JSON.stringify({email, token});
+      await localStorage.setItem(usersDbName, user);
+      res(true)
+
+    } catch(e) {
+      console.log("persistUser error");
+      rej(false);
+    }
+  });
+}
+
+export function testLogOut(): Promise<boolean> {
+  return new Promise(async (res, rej) => {
+    try {    
+      await localStorage.removeItem(usersDbName);
+      res(true)
+
+    } catch(e) {
+      console.log("GetBudget error");
+      rej(false);
+    }
+  });
+}
+
+
+export function getPersistedUser(): Promise<authData | false> {
+  return new Promise(async (res, rej) => {
+    try {
+      let usersDbString = await localStorage.getItem(usersDbName);
+      if(usersDbString) {
+        const user = JSON.parse(usersDbString);
+        res({
+          email: user.email,
+          token: user.token,
+        })
+      } else {
+        rej(false);
+      }
+    } catch(e) {
+      console.log("getPersistedUser error");
+      rej(false);
+    }
+  });
+}
+

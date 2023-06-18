@@ -4,13 +4,20 @@ import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogin } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { AddIcon } from "@chakra-ui/icons";
+import { useSetRecoilState } from "recoil";
+import { authState } from "../../atoms/AuthAtom";
+import { RecoilSignOut } from "../../atoms/auth-atom-utils";
+import { AuthGateway } from "../../domains/auth/auth-gateway";
 
 type LoggedUserMenuProps = {};
 
 const LoggedUserMenu: React.FC<LoggedUserMenuProps> = () => {
 
+  const setAuthRecoil = useSetRecoilState(authState);
+
   const logout = async () => {
-    
+    RecoilSignOut(setAuthRecoil);
+    AuthGateway.logOut();
   }
 
   return (
