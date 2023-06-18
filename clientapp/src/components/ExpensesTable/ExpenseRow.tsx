@@ -1,21 +1,16 @@
 import React from 'react';
-import {
-  Button,
-  Input,
-  Select,
-  Td,
-  Tr
-} from '@chakra-ui/react';
+import { Button, Input, Select, Td, Tr } from '@chakra-ui/react';
 import { Expense } from '../../domains/models/Expense';
 import { ICategory } from '../../domains/models/ICategory';
 import { NewExpense } from '../../domains/models/NewExpense';
 import { MdBuild } from 'react-icons/md';
+import { useRecoilState } from 'recoil';
+import { categoriesState } from '../../atoms/CategoriesAtom';
 
 type ExpenseRowProps = {
   idx: number;
   expense: Expense;
   nowEdit: string | null;
-  categories: ICategory[];
   handleEditInputValue: (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
   nowEditValue: NewExpense,
   handleCancel: () => void,
@@ -28,7 +23,6 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   idx,
   expense,
   nowEdit,
-  categories,
   handleEditInputValue,
   nowEditValue,
   handleCancel,
@@ -36,6 +30,13 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   handleRemove,
   handleEditCategory
 }) => {
+
+  const [categoriesRecoil, setCategoriesRecoil] = useRecoilState(categoriesState);
+
+  const getCategoryById = (id: string): ICategory => {
+    return categoriesRecoil.categories.find(c => c.id === id)!;
+  }
+
   return (
     <Tr key={expense.id}>
       <Td>{idx}</Td>
@@ -44,9 +45,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           nowEdit == null || nowEdit !== expense.id ? (
             expense.note
           ) : (
-            <>
-              <Input border={'1px solid gray'} focusBorderColor='pink.400' name="note" htmlSize={6} width='auto' color='teal' value={nowEditValue.note} onChange={(e) => { handleEditInputValue(e);  }} />
-            </>
+            <Input border={'1px solid gray'} focusBorderColor='pink.400' name="note" htmlSize={6} width='auto' color='teal' value={nowEditValue.note} onChange={(e) => { handleEditInputValue(e);  }} />
           )
         }
       </Td>
@@ -55,16 +54,14 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
           nowEdit == null || nowEdit !== expense.id ? (
             expense.amount
           ) : (
-            <>
-              <Input border={'1px solid gray'} focusBorderColor='pink.400' name='amount' htmlSize={1} width='auto' color='teal' value={nowEditValue.amount} onChange={(e) => { handleEditInputValue(e); }} />
-            </>
+            <Input border={'1px solid gray'} focusBorderColor='pink.400' name='amount' htmlSize={1} width='auto' color='teal' value={nowEditValue.amount} onChange={(e) => { handleEditInputValue(e); }} />
           )
         }
       </Td>
       <Td>
       {
           nowEdit == null || nowEdit !== expense.id ? (
-            expense.category
+            getCategoryById(expense.categoryId).name
           ) : (
             <>
               <Select
@@ -77,13 +74,13 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
                 shadow="sm"
                 size="md"
                 w="full"
-                value={nowEditValue.category}
+                value={nowEditValue.categoryId}
                 onChange={(e) => handleEditInputValue(e)}
                 rounded="md">
                   {
-                    categories?.map(val => {
+                    categoriesRecoil.categories?.map(val => {
                       return(
-                        <option key={val.id} value={val.name}>{val.name}</option>
+                        <option key={val.id} value={val.id}>{val.name}</option>
                       )
                     })
                   }
@@ -95,9 +92,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
       <Td>
         {
           nowEdit == null || nowEdit !== expense.id ? (
-            <>
-              <Button leftIcon={<MdBuild />} colorScheme='pink' variant='outline' onClick={() => handleEditCategory(expense.id) } >Edit</Button>
-            </>
+            <Button leftIcon={<MdBuild />} colorScheme='pink' variant='outline' onClick={() => handleEditCategory(expense.id!) } >Edit</Button>
           ) : (
             <>
               <Button leftIcon={<MdBuild />} colorScheme='pink' variant='outline' onClick={handleUpdateExpense}>Update</Button>
@@ -107,7 +102,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
         }
       </Td>
       <Td>
-        <Button colorScheme='teal' size='md' onClick={() => handleRemove(expense.id)}>Remove</Button>
+        <Button colorScheme='teal' size='md' onClick={() => handleRemove(expense.id!)}>Remove</Button>
       </Td>
     </Tr>
   )

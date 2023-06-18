@@ -1,6 +1,6 @@
 import React from "react";
 import { MenuItem, Flex, Text } from "@chakra-ui/react";
-import { addTestBudget } from "../../domains/expenses/expenses-gateway";
+import { addTestBudget } from "../../domains/expenses/expenses2-gateway";
 import AuthModal from "../modal/auth/AuthModal";
 import { useSetRecoilState } from "recoil";
 import { appState } from "../../atoms/AppAtom";
@@ -21,7 +21,6 @@ const NotLoggedUserMenu: React.FC = () => {
     RecoilOpenModal(setAppRecoil, 'signup');
   }
 
-
   return (
     <>
       <AuthModal />
@@ -36,7 +35,6 @@ const NotLoggedUserMenu: React.FC = () => {
           <Text fontSize="16px" ml={3} fontWeight={600}>
             Zaloguj
           </Text>
-          
         </Flex>
       </MenuItem>
       <MenuItem
@@ -50,7 +48,6 @@ const NotLoggedUserMenu: React.FC = () => {
           <Text fontSize="16px" ml={3} fontWeight={600}>
             Zarejestruj
           </Text>
-          
         </Flex>
       </MenuItem>
       <MenuItem

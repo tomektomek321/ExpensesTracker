@@ -10,14 +10,12 @@ import {
 } from '@chakra-ui/react';
 
 import { Expense } from '../../domains/models/Expense';
-import { ICategory } from '../../domains/models/ICategory';
 import { NewExpense } from '../../domains/models/NewExpense';
 import ExpenseRow from './ExpenseRow';
 
 type ExpenseRowProps = {
   expenses: Expense[];
   nowEdit: string | null;
-  categories: ICategory[];
   handleEditInputValue: (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
   nowEditValue: NewExpense,
   handleCancel: () => void,
@@ -29,7 +27,6 @@ type ExpenseRowProps = {
 const ExpensesTable: React.FC<ExpenseRowProps> = ({
   expenses,
   nowEdit,
-  categories,
   handleEditInputValue,
   nowEditValue,
   handleCancel,
@@ -60,7 +57,6 @@ const ExpensesTable: React.FC<ExpenseRowProps> = ({
                     idx={idx}
                     expense={expense}
                     nowEdit={nowEdit}
-                    categories={categories}
                     handleEditInputValue={handleEditInputValue}
                     nowEditValue={nowEditValue}
                     handleCancel={handleCancel}

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
+  Flex,
+  Spinner,
   Text,
 } from '@chakra-ui/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -10,23 +12,28 @@ import { ICategory } from '../../domains/models/ICategory';
 import { emptyNewExpense } from '../../common/data/mocks';
 import { BudgetState, budgetState } from '../../atoms/BudgetAtom';
 import { changeDay } from '../../common/utils/date-and-time/commn-util-date-and-time';
-import { GetExpensesBy, RemoveExpense, UpdateExpense } from '../../domains/expenses/expenses-gateway';
-import { Budget } from '../../domains/models/Budget';
-import GetCategoriesByUserId from '../../domains/categories/categories-gateway';
+import { UpdateExpense } from '../../domains/expenses/expenses2-gateway';
 import ExpensesHeader from './ExpensesHeader';
 import ExpensesTable from '../ExpensesTable/ExpensesTable';
 import NewExpenseForm from '../newExpenseForm/NewExpenseForm';
 import { appState } from '../../atoms/AppAtom';
+import { CategoryGateway } from '../../domains/categories/categories-gateway';
+import { ExpensesGateway } from '../../domains/expenses/expenses-gateway';
+import { authState } from '../../atoms/AuthAtom';
+import { period } from '../../domains/enums/Period';
+import { categoriesState } from '../../atoms/CategoriesAtom';
 
 export default function DayView() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<NewExpense>(emptyNewExpense);
   const [totalDay, setTotalDay] = useState<number>(0);
+  const [loading, setLoading] =  useState<boolean>(true);
 
   const setBudgetState = useSetRecoilState(budgetState);
   const [appRecoil, setAppState] = useRecoilState(appState);
+  const [authRecoil, setAuthRecoil] = useRecoilState(authState);
+  const [categoriesRecoil, setCategoriesRecoil] = useRecoilState(categoriesState);
 
   useEffect(() => {
     getCategories();    
@@ -34,21 +41,19 @@ export default function DayView() {
 
   useEffect(() => {
     getExpensesAndBudget();
-  }, [appRecoil.date]);
-
+  }, [appRecoil.date, authRecoil.logged]);
 
   const getExpensesAndBudget = () => {
-    GetExpensesBy("sad", appRecoil.date).then((expenses_: [Expense[], Budget] | number) => {
-      if(typeof expenses_ !== 'number' ) {
-        setExpenses(prev => expenses_[0]);
-        countTotalDay(expenses_[0]);
+    if(!authRecoil.logged) return;
 
-        setBudgetState((prev: BudgetState) => ({
-          ...prev,
-          amount: expenses_[1].amount,
-          period: expenses_[1].period,
-        }));
-      }
+    ExpensesGateway.getExpenses(appRecoil.date).then( (expenses: Expense[]) => {
+      setExpenses(expenses);
+      countTotalDay(expenses);
+      setBudgetState((prev: BudgetState) => ({
+        ...prev,
+        amount: 800,
+        period: period.Monthly,
+      }));
     });
   }
 
@@ -62,9 +67,16 @@ export default function DayView() {
   }
 
   const getCategories = () => {
-    GetCategoriesByUserId("sad").then((val: ICategory[]) => {
-      setCategories(val);
-    })
+    setLoading(true);
+    CategoryGateway.getCategories().then( (categories: ICategory[]) => {
+      setCategoriesRecoil(prev => {
+        return {
+          ...prev,
+          categories,
+        }
+      });
+      setLoading(false);
+    });
   }
 
   const showDay = (shift: number) => {
@@ -74,7 +86,7 @@ export default function DayView() {
         ...prev,
         date: day,
       }
-    })
+    });
   }
 
   const handleEditCategory = (id: string) => {
@@ -83,7 +95,7 @@ export default function DayView() {
     const expense = expenses.find(e => e.id === id)!;
 
     setNowEditValue({
-      category: expense.category,
+      categoryId: expense.categoryId,
       note: expense.note,
       amount: expense.amount,
     });
@@ -95,7 +107,7 @@ export default function DayView() {
 
     const newExpense = new Expense({ 
       id: newExpenses[foundedExpense].id,
-      category: nowEditValue.category,
+      categoryId: nowEditValue.categoryId,
       note: nowEditValue.note,
       amount: parseFloat(nowEditValue.amount.toString()),
       date: newExpenses[foundedExpense].date.toString(),
@@ -120,10 +132,12 @@ export default function DayView() {
   }
 
   const handleRemove = (id: string) => {
-    RemoveExpense(id).then((resp: number) => {
-      const newExpenses = [...expenses.filter(c => c.id !== id)];
-      setExpenses(newExpenses);
-      countTotalDay(newExpenses);
+    ExpensesGateway.deleteExpense(id).then((resp: boolean) => {
+      if(resp) {
+        const newExpenses = [...expenses.filter(c => c.id !== id)];
+        setExpenses(newExpenses);
+        countTotalDay(newExpenses);
+      }
     });
   }
 
@@ -131,6 +145,14 @@ export default function DayView() {
     setNowEditValue(prev => {
       return { ...prev, [ev.target.name]: ev.target.value };
     });
+  }
+
+  if(loading) {
+    return(
+      <Flex direction={'column'} justifyContent="center" alignItems={'center'} p="16px 0px">
+        <Spinner size='xl' />
+      </Flex>
+    )
   }
 
   return (
@@ -158,7 +180,6 @@ export default function DayView() {
             <ExpensesTable
               expenses={expenses}
               nowEdit={nowEdit}
-              categories={categories}
               handleEditInputValue={handleEditInputValue}
               nowEditValue={nowEditValue}
               handleCancel={handleCancel}
@@ -172,7 +193,7 @@ export default function DayView() {
         <NewExpenseForm 
           expenses={expenses}
           setExpenses={setExpenses}
-          categories={categories}
+          categories={categoriesRecoil.categories}
           countTotalDay={countTotalDay}
         />
       </Box>

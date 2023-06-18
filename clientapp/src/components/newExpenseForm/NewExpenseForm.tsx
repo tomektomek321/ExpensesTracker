@@ -13,11 +13,11 @@ import {
 import { Expense } from '../../domains/models/Expense';
 import { ICategory } from '../../domains/models/ICategory';
 import { NewExpense } from '../../domains/models/NewExpense';
-import { emptyNewExpense, testUserId } from '../../common/data/mocks';
-import { SaveExpense } from '../../domains/expenses/expenses-gateway';
-import { makeRandomID } from '../../common/utils/randomID';
+import { emptyNewExpense } from '../../common/data/mocks';
+import { createGuid } from '../../common/utils/randomID';
 import { useRecoilValue } from 'recoil';
 import { appState } from '../../atoms/AppAtom';
+import { ExpensesGateway } from '../../domains/expenses/expenses-gateway';
 
 type NewExpenseFormProps = {
   expenses: Expense[];
@@ -49,22 +49,19 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
     const newExpenses: Expense[] = [...expenses];
 
     const ob = new Expense({
-      id: makeRandomID(),
+      id: createGuid(),
       note: newExpenseValue.note,
-      category: newExpenseValue.category,
+      categoryId: newExpenseValue.categoryId,
       amount: parseFloat(newExpenseValue.amount.toString()),
       date: appRecoil.date.toString(),
-      userId: testUserId,
-    });
+      userId: "e8931788-279e-46a3-951a-5a0ace4c9c8c",
+    });  
 
-    newExpenses.push(ob);
-
-    SaveExpense(ob).then((response: number) => {
-      if(response === 1) {
-        setExpenses(newExpenses);
-        countTotalDay(newExpenses);
-        setNewExpenseValue(emptyNewExpense);
-      }
+    ExpensesGateway.saveExpense(ob).then((response: Expense) => {
+      newExpenses.push(response);
+      setExpenses(newExpenses);
+      countTotalDay(newExpenses);
+      setNewExpenseValue(emptyNewExpense);    
     });
   }
 
@@ -91,7 +88,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
         <FormControl as={GridItem}>
           <FormLabel
             mt={3}
-            htmlFor="category"
+            htmlFor="categoryId"
             fontSize="sm"
             fontWeight="md"
             color="gray.700"
@@ -103,8 +100,8 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           </FormLabel>
           <Select
             mt={1}
-            name="category"
-            autoComplete="category"
+            name="categoryId"
+            autoComplete="categoryId"
             placeholder="Select option"
             focusBorderColor="brand.400"
             border={'1px solid gray'} 
@@ -117,7 +114,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
             {
               categories?.map(val => {
                 return(
-                  <option key={val.id}>{val.name}</option>
+                  <option key={val.id} value={val.id}>{val.name}</option>
                 )
               })
             }
