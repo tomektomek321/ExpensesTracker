@@ -12,6 +12,7 @@ namespace webapi.Models
         public Guid UserId { get; set; }
         public Guid CategoryId { get; set; }
         public decimal Amount { get; set; }
+        [JsonIgnore(Condition =JsonIgnoreCondition.WhenWritingNull)]
         public decimal? Remaining { get; set; }
         public Enums.BudgetPeriod Period { get; set; }
         public Budget(Data.Models.Budget pBudget) {
