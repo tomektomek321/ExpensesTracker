@@ -9,12 +9,13 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Identity;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("ExpensesTrackerDbConnection");
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options=> options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddDbContext<ExpensesDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<webapi.Data.Models.User, webapi.Data.Models.Role>()
