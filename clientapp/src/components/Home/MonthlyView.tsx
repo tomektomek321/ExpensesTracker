@@ -2,9 +2,9 @@ import { Flex } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil';
 import { appState } from '../../atoms/AppAtom';
-import { DayExpenses, GetMonthExpensesBy } from '../../domains/expenses/expenses2-gateway';
-import { testUserId } from '../../common/data/mocks';
+import { DayExpenses } from '../../domains/expenses/expenses-gateway';
 import DayOfMonth from './DayOfMonth';
+import { ExpensesGateway } from '../../domains/expenses/expenses-gateway';
 
 export default function MonthlyView() {
 
@@ -12,7 +12,16 @@ export default function MonthlyView() {
   const [monthExpenses, setMonthExpenses] = useState<DayExpenses[]>([]);
 
   useEffect(() => {
-    GetMonthExpensesBy(testUserId, appRecoil.date).then((month: DayExpenses[] | number) => {
+    // ExpensesGateway.getMonthlyExpenses(appRecoil.date)
+    // .then((month: DayExpenses[] | number) => {
+    //   if(typeof month !== 'number') {
+    //     setMonthExpenses(month);
+    //   }
+    // });
+
+    ExpensesGateway.getMonthlyExpenses(appRecoil.date)
+    .then((month: DayExpenses[] | number) => {
+      console.log(month);
       if(typeof month !== 'number') {
         setMonthExpenses(month);
       }

@@ -5,6 +5,7 @@ import { makeRandomID } from "../../common/utils/randomID";
 import { period } from "../enums/Period";
 import { Budget } from "../models/Budget";
 import { Expense } from "../models/Expense";
+import { DayExpenses } from "./expenses-gateway";
 
 const expensesDbName = 'expenses';
 const usersDbName = 'expenseUser';
@@ -32,10 +33,6 @@ export function GetExpensesBy(userId: string, date: Date): Promise<[Expense[], B
   });
 }
 
-export interface DayExpenses {
-  day: number;
-  expenses: Expense[];
-}
 
 export function GetMonthExpensesBy(userId: string, date: Date): Promise<DayExpenses[] | number> {
   return new Promise(async (res, rej) => {

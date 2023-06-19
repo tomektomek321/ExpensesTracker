@@ -47,6 +47,7 @@ export default function DayView() {
     if(!authRecoil.logged) return;
 
     ExpensesGateway.getExpenses(appRecoil.date).then( (expenses: Expense[]) => {
+      console.log(expenses);
       setExpenses(expenses);
       countTotalDay(expenses);
       setBudgetState((prev: BudgetState) => ({
