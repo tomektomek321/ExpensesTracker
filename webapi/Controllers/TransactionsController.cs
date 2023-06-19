@@ -23,10 +23,10 @@ namespace webapi.Controllers {
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Models.Transaction>> Get([FromQuery(Name = "date")] DateTime? pTransactionsDate) {
+        public ActionResult<IEnumerable<Models.Transaction>> Get([FromQuery(Name = "date")] DateTime? pTransactionsDate, [FromQuery(Name = "month")] int? pTransactionsMonth, [FromQuery(Name = "year")] int? pTransactionsYear) {
             try {
                 string userId = GetUserId();
-                return new OkObjectResult(_transactionsManager.GetTransacations(pTransactionsDate, userId));
+                return new OkObjectResult(_transactionsManager.GetTransacations(pTransactionsDate, pTransactionsMonth, pTransactionsYear, userId));
             }
             catch (Exception ex) {
                 _logger.LogError(ex.Message, ex.StackTrace);

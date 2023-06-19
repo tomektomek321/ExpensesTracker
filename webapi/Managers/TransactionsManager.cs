@@ -13,10 +13,12 @@ namespace webapi.Managers
         public TransactionsManager(Data.ExpensesDbContext pContext) {
             _context = pContext;
         }
-        public IEnumerable<Models.Transaction> GetTransacations(DateTime? pTransactionsDate, string pUserId) {
+        public IEnumerable<Models.Transaction> GetTransacations(DateTime? pTransactionsDate, int? pTransactionsMonth, int? pTransactionsYear, string pUserId) {
             IOrderedEnumerable<Data.Models.Transaction> dbCategories = _context.Transactions
                     .Where(x=>
                         x.Date.Date == (pTransactionsDate ?? x.Date.Date)
+                        && x.Date.Month == (pTransactionsMonth ?? x.Date.Month)
+                        && x.Date.Year == (pTransactionsYear ?? x.Date.Year)
                         && x.UserId == pUserId)
                     .AsEnumerable()
                     .OrderBy(x=>x.Date);
