@@ -41,8 +41,20 @@ const LoggedUserMenu: React.FC<LoggedUserMenuProps> = () => {
       >
         <Flex alignItems="center">
           <AddIcon  fontSize={17} mr={2}/>
-          <Link to={'category/create'}>
-            Create Category
+          <Link to={'categories'}>
+            Categories
+          </Link>
+        </Flex>
+      </MenuItem>
+      <MenuItem
+        fontSize="10pt"
+        fontWeight={700}
+        _hover={{ bg: "blue.500", color: "white" }}
+      >
+        <Flex alignItems="center">
+          <AddIcon  fontSize={17} mr={2}/>
+          <Link to={'subsciptions'}>
+            Subscriptions
           </Link>
         </Flex>
       </MenuItem>

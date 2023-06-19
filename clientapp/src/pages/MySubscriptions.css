@@ -1,0 +1,9 @@
+.my-datepicker {
+  height: 40px;
+  border-radius: 5px;
+  padding-left: 5px;
+  font-size: 17px;
+  width: 110px;
+  background-color: #e3e8f0;
+  border: 1px solid gray;
+}
