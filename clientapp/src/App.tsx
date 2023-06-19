@@ -7,6 +7,7 @@ import { RecoilRoot } from 'recoil';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import MyCategories from './pages/MyCategories';
+import MySubscriptions from './pages/MySubscriptions';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Routes>
               <Route index element={<Home />} />
               <Route path="categories" element={<MyCategories />} />
+              <Route path="subsciptions" element={<MySubscriptions />} />
             </Routes>
           </div>
         </ChakraProvider>

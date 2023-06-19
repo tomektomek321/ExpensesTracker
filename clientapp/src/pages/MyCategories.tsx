@@ -31,10 +31,6 @@ export default function MyCategories() {
   }, []);
 
   const getCategoriesByUserId = () => {
-    // GetCategoriesByUserId("sad").then((val: ICategory[]) => {
-    //   setCategories(val);
-    //   setLoading(false);
-    // })
     CategoryGateway.getCategories().then( r => {
       setCategories(r);
       setLoading(false);
