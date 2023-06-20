@@ -99,7 +99,6 @@ export class AuthGateway {
     return new Promise((res, rej) => {
       res(1);
       localStorage.removeItem(this.userStorage);
-      console.log(2);
     });
   }
 }

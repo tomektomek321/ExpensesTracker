@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import MyCategories from './pages/MyCategories';
 import MySubscriptions from './pages/MySubscriptions';
+import AuthModal from './components/modal/auth/AuthModal';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <BrowserRouter>
         <ChakraProvider theme={theme}>
           <div className="App">
+            <AuthModal />
             <Navbar />
             <Routes>
               <Route index element={<Home />} />

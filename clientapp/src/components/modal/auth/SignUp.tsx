@@ -44,9 +44,8 @@ const SignUp: React.FC = () => {
 
     AuthGateway.register({'Username': form.username,
       'Email': form.email,
-      'Password': form.password}).then( response => {
-      console.log(response);
-    }).then( data => {
+      'Password': form.password})
+    .then( data => {
       setFormSuccess("Register successfuly. Plaese login");
     }).catch( e => {
       setFormError("Register failed. Plaese fix something xd");

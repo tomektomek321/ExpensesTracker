@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Flex,
-  Spinner,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Flex, Spinner, Text } from '@chakra-ui/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { NewExpense } from '../../domains/models/NewExpense';
 import { Expense } from '../../domains/models/Expense';
@@ -22,6 +17,7 @@ import { ExpensesGateway } from '../../domains/expenses/expenses-gateway';
 import { authState } from '../../atoms/AuthAtom';
 import { period } from '../../domains/enums/Period';
 import { categoriesState } from '../../atoms/CategoriesAtom';
+import { RecoilSignOut } from '../../atoms/auth-atom-utils';
 
 export default function DayView() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -51,9 +47,26 @@ export default function DayView() {
       countTotalDay(expenses);
       setBudgetState((prev: BudgetState) => ({
         ...prev,
-        amount: 800,
+        amount: 3000,
         period: period.Monthly,
       }));
+    })
+    .catch(r => {
+      console.log(r);
+      signOutAndOpenModal();
+    });
+  }
+
+  const signOutAndOpenModal = () => {
+    RecoilSignOut(setAuthRecoil);
+    setAppState(prev => {
+      return {
+        ...prev,
+        viewModal: {
+          ...prev.viewModal,
+          open: true,
+        }
+      }
     });
   }
 
@@ -193,7 +206,6 @@ export default function DayView() {
         <NewExpenseForm 
           expenses={expenses}
           setExpenses={setExpenses}
-          categories={categoriesRecoil.categories}
           countTotalDay={countTotalDay}
         />
       </Box>

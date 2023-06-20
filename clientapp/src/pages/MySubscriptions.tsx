@@ -60,12 +60,10 @@ export default function MySubscriptions() {
   }
 
   const handleDateChange = (date: any) => {
-    console.log(date);
     setSelectedDate(date);
   };
 
   const handleEditDateChange = (date: any) => {
-    console.log(date);
     setEditSelectedDate(date);
   };
 
