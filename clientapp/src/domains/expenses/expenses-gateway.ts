@@ -136,7 +136,6 @@ export class ExpensesGateway {
       })
       .then(d => d.json())
       .then((resp: IExpensesResponse[]) => {
-        console.log(resp);
         return resp;
       })
       .then((d: IExpensesResponse[]) => {
@@ -178,7 +177,6 @@ export class ExpensesGateway {
       })
       .then(d => d.json())
       .then((resp: IExpense) => {
-        debugger;
         res(new Expense(resp));
       }).catch(e => { 
         console.log(e);

@@ -15,7 +15,6 @@ export default function MonthlyView() {
   useEffect(() => {
     ExpensesGateway.getMonthlyExpenses(appRecoil.date)
     .then((month: DayExpenses[] | number) => {
-      console.log(month);
       if(typeof month !== 'number') {
         const resp = addEmptyDays(month, appRecoil.date);
         setMonthExpenses(resp);

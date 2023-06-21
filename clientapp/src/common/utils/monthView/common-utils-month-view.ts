@@ -1,14 +1,9 @@
 import { DayExpenses } from "../../../domains/expenses/expenses-gateway";
 
 export function addEmptyDays(month: DayExpenses[], date: Date) {
-  const monthDetails = date.getMonth();
-  debugger;
-
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
 
   let lastDay: Date = getLastDateOfMonth(date);
-
-
 
   const dayOfWeekFirst = firstDay.getDay();
   const dayOfWeekLast = lastDay.getDay();
@@ -21,7 +16,6 @@ export function addEmptyDays(month: DayExpenses[], date: Date) {
     const b = addPreviousDays(7 - dayOfWeekFirst, date);
     resp = [...b, ...resp];
   }
-  console.log(2);
 
   if(dayOfWeekLast === 0) {
     
@@ -29,7 +23,6 @@ export function addEmptyDays(month: DayExpenses[], date: Date) {
     const b = addNextDays(7 - dayOfWeekLast, date);
     resp = [...resp, ...b];
   }
-  console.log(resp);
 
   return resp;
 

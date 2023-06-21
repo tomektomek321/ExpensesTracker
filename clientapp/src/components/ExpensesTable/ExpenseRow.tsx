@@ -36,7 +36,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({
   const getCategoryById = (id: string): ICategory => {
     return categoriesRecoil.categories.find(c => c.id === id)!;
   }
-  console.log(expense)
+
   return (
     <Tr key={expense.id}>
       <Td>{idx}</Td>
