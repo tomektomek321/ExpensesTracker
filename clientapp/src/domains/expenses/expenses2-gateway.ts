@@ -62,7 +62,7 @@ export function GetMonthExpensesBy(userId: string, date: Date): Promise<DayExpen
         });
 
         const d: DayExpenses = {
-          day: i,
+          day: date1,
           expenses: day,
         }
 

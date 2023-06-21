@@ -1,7 +1,6 @@
 import React from "react";
 import { MenuItem, Flex, Text } from "@chakra-ui/react";
 import { addTestBudget } from "../../domains/expenses/expenses2-gateway";
-import AuthModal from "../modal/auth/AuthModal";
 import { useSetRecoilState } from "recoil";
 import { appState } from "../../atoms/AppAtom";
 import { RecoilOpenModal } from "../../atoms/app-atom-utils";
@@ -23,7 +22,6 @@ const NotLoggedUserMenu: React.FC = () => {
 
   return (
     <>
-      <AuthModal />
       <MenuItem
         fontSize="10pt"
         fontWeight={700}

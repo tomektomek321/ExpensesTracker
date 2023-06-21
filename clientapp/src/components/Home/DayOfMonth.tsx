@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Expense } from '../../domains/models/Expense';
 import { Box, Flex } from '@chakra-ui/react';
 import { countDayBudget, countDayBudgetPercentage, setColorForPercentage } from '../../common/utils/budget/common-util-budget';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { budgetState } from '../../atoms/BudgetAtom';
-import { getNumberOfDaysForMonth } from '../../common/utils/date-and-time/commn-util-date-and-time';
+import { convertToUrlDateTime, getNumberOfDaysForMonth } from '../../common/utils/date-and-time/commn-util-date-and-time';
 import { appState } from '../../atoms/AppAtom';
 import { ViewType } from '../../domains/enums/ViewType';
 
 type ExpenseRowProps = {
-  day: number;
+  day: Date;
   expenses: Expense[];
 };
 
@@ -27,6 +27,10 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
     return value;
   }
 
+  useEffect(() => {
+    
+  }, []);
+
   const setColor = (): string => {
     const numberOfDays = getNumberOfDaysForMonth(appRecoil.date);
     const dayBudget = countDayBudget(numberOfDays, budgetRecoil.amount!);
@@ -37,7 +41,7 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
   }
 
   const showDay = () => {
-    let setDay = appRecoil.date.setDate(day);
+    let setDay = appRecoil.date.setDate(day.getDate());
     let newDate = new Date(setDay);
 
     setAppState(prev => {
@@ -49,6 +53,10 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
     })
   }
 
+  const isTheSameMonth = () => {
+    return appRecoil.date.getMonth() === day.getMonth()
+  }
+
   return (
     <Flex
       flexDirection={'column'}
@@ -57,13 +65,14 @@ const DayOfMonth: React.FC<ExpenseRowProps> = ({
       shadow="1px 1px 3px rgba(0,0,0,0.3)"
       p={6}
       width={'130px'}
-      minHeight={'170px'}
+      minHeight={'140px'}
       m="6px"
       justifyContent={'space-between'}
       bgColor={setColor()}
+      opacity={isTheSameMonth() ? 1 : 0.3}
       onClick={() => showDay()}
     >
-      <Box>Day {day}</Box>
+      <Box>{convertToUrlDateTime(day)}</Box>
       <Flex flexDirection={'column'}>
         { sumDayBudget() } zł
       </Flex>

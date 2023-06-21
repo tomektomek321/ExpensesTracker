@@ -15,7 +15,6 @@ export default function MyCategories() {
   const [nowEdit, setNowEdit] =  useState<string | null>(null);
   const [nowEditValue, setNowEditValue] =  useState<string>("");
   const [newCategoryValue, setNewCategoryValue] =  useState<string>("");
-
   const [authRecoil, setAuthRecoil] = useRecoilState(authState);
 
   useEffect(() => {

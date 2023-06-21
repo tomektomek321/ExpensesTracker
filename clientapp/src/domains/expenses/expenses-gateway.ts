@@ -2,11 +2,11 @@ import { convertToUrlDateTime, getNumberOfDaysForMonth, isTheSameDate } from "..
 import { environment } from "../../environment/environment";
 import { AuthGateway } from "../auth/auth-gateway";
 import { Expense } from "../models/Expense";
-import { IExpensesResponse } from "../models/IExpense";
+import { IExpense, IExpensesResponse } from "../models/IExpense";
 import { IExpensePayload } from "../models/IExpensePayload";
 
 export interface DayExpenses {
-  day: number;
+  day: Date;
   expenses: Expense[];
 }
 
@@ -64,10 +64,19 @@ export class ExpensesGateway {
           'Authorization': `Bearer ${token.token}`
         }
       })
-      .then(d => d.json())
+      .then((d: Response) => {
+        if(d.status === 401) {
+          rej(401);
+          return;
+        } else {
+          return d.json();
+        }
+      })
       .then((resp: IExpensesResponse[]) => {
-        const response: Expense[] = this.convertDtoToExpenses(resp);
-        res(response);
+        if(resp !== undefined) {
+          const response: Expense[] = this.convertDtoToExpenses(resp);
+          res(response);
+        }
       }).catch(e => { 
         console.log(e);
         rej(e);
@@ -104,15 +113,12 @@ export class ExpensesGateway {
       });
 
       const d: DayExpenses = {
-        day: i,
+        day: date1,
         expenses: day,
       }
 
       dayExpenses.push(d);
     }
-
-
-
 
     return dayExpenses;
   }
@@ -171,8 +177,9 @@ export class ExpensesGateway {
         body: JSON.stringify(expense),
       })
       .then(d => d.json())
-      .then((resp: Expense) => {
-        res(resp);
+      .then((resp: IExpense) => {
+        debugger;
+        res(new Expense(resp));
       }).catch(e => { 
         console.log(e);
         rej(e);

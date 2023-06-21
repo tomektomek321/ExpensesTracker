@@ -11,38 +11,41 @@ import {
   Select,
 } from '@chakra-ui/react';
 import { Expense } from '../../domains/models/Expense';
-import { ICategory } from '../../domains/models/ICategory';
 import { NewExpense } from '../../domains/models/NewExpense';
 import { emptyNewExpense } from '../../common/data/mocks';
 import { createGuid } from '../../common/utils/randomID';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { appState } from '../../atoms/AppAtom';
 import { ExpensesGateway } from '../../domains/expenses/expenses-gateway';
+import { categoriesState } from '../../atoms/CategoriesAtom';
 
 type NewExpenseFormProps = {
   expenses: Expense[];
   setExpenses: any;
-  categories: ICategory[],
   countTotalDay: any,
 };
 
 const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   expenses,
   setExpenses,
-  categories,
-  countTotalDay
+  countTotalDay,
 }) => {
   const appRecoil = useRecoilValue(appState);
   const [newExpenseValue, setNewExpenseValue] =  useState<NewExpense>(emptyNewExpense);
+  const [categoriesRecoil, setCategoriesRecoil] = useRecoilState(categoriesState);
 
-  const handleSetNewExpenseValue = (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleSetNewExpenseValue = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setNewExpenseValue(prev => {
-      return { ...prev, [ev.target.name]: ev.target.value };
+      return { ...prev, [name]: value };
     });
   }
 
   const handleClear = () => {
-    setNewExpenseValue(emptyNewExpense);
+    setNewExpenseValue(prev => ({
+      ...prev, 
+      amount: emptyNewExpense.amount,
+      note: emptyNewExpense.note,
+    }));
   }
 
   const handleCreate = () => {
@@ -55,13 +58,17 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
       amount: parseFloat(newExpenseValue.amount.toString()),
       date: appRecoil.date.toString(),
       userId: "e8931788-279e-46a3-951a-5a0ace4c9c8c",
-    });  
+    });
 
     ExpensesGateway.saveExpense(ob).then((response: Expense) => {
       newExpenses.push(response);
       setExpenses(newExpenses);
       countTotalDay(newExpenses);
-      setNewExpenseValue(emptyNewExpense);    
+      setNewExpenseValue(prev => ({
+        ...prev, 
+        amount: emptyNewExpense.amount,
+        note: emptyNewExpense.note,
+      }));
     });
   }
 
@@ -112,7 +119,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
             rounded="md"
           >
             {
-              categories?.map(val => {
+              categoriesRecoil.categories?.map(val => {
                 return(
                   <option key={val.id} value={val.id}>{val.name}</option>
                 )
